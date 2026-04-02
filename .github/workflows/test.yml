@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.3.0
+          use-dotnet: false
+
+      - name: Install GUT
+        run: |
+          GUT_VERSION="9.3.0"
+          mkdir -p addons
+          curl -sL "https://github.com/bitwes/Gut/archive/refs/tags/v${GUT_VERSION}.tar.gz" | tar xz
+          mv "Gut-${GUT_VERSION}/addons/gut" addons/gut
+          rm -rf "Gut-${GUT_VERSION}"
+
+      - name: Import project
+        run: godot --headless --import --quit-after 5 || true
+
+      - name: Run tests
+        run: godot --headless -s addons/gut/gut_cmdln.gd -gexit

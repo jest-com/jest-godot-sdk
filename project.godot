@@ -1,0 +1,16 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; but it can also be manually edited.
+
+[application]
+
+config/name="Jest SDK Tests"
+run/main_scene=""
+
+[autoload]
+
+JestSDK="*res://addons/jest_sdk/jest_sdk.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/jest_sdk/plugin.cfg")
