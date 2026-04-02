@@ -1,0 +1,32 @@
+# Godot 4+ specific ignores
+.godot/
+.godot_export/
+
+# GUT test framework (installed at test time)
+addons/gut/
+
+# Godot-specific ignores
+*.translation
+
+# Imported resources
+.import/
+
+# Export templates
+*.export
+
+# Builds
+build/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude Code
+.claude/
+
+# IDE
+.vscode/
+*.swp
+*.swo
+*~
