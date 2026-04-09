@@ -135,6 +135,7 @@ func test_set_value_emits_change():
 func test_delete_emits_change():
 	player.set_value("key", "val")
 	changed_keys.clear()
+	changed_values.clear()
 	player.delete_value("key")
 	assert_eq(changed_keys.size(), 1)
 	assert_eq(changed_keys[0], "key")
