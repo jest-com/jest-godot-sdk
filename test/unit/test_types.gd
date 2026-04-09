@@ -62,16 +62,24 @@ func test_purchase_from_dict():
 	var d := {
 		"purchaseToken": "tok_123",
 		"productSku": "gems_100",
-		"credits": 99,
+		"credits": 99.0,
 		"createdAt": 1700000000,
-		"completedAt": 1700000100
+		"completedAt": 1700000100,
+		"estimatedRevenue": 69.30
 	}
 	var p := JestPurchase.from_dict(d)
 	assert_eq(p.purchase_token, "tok_123")
 	assert_eq(p.product_sku, "gems_100")
-	assert_eq(p.credits, 99)
+	assert_eq(p.credits, 99.0)
 	assert_eq(p.created_at, 1700000000)
 	assert_eq(p.completed_at, 1700000100)
+	assert_eq(p.estimated_revenue, 69.30)
+
+
+func test_purchase_decimal_credits():
+	var p := JestPurchase.from_dict({"credits": 1.50, "estimatedRevenue": 0.75})
+	assert_eq(p.credits, 1.50)
+	assert_eq(p.estimated_revenue, 0.75)
 
 
 func test_purchase_null_completed_at():
