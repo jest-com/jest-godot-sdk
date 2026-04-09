@@ -318,10 +318,7 @@ func get_products() -> Dictionary:
 
 func begin_purchase(sku: String) -> Dictionary:
 	if not _is_web:
-		if _mock.is_registered:
-			return {"result": _mock.get_purchase_response(), "error": "", "timed_out": false}
-		else:
-			return {"result": "", "error": "login_required", "timed_out": false}
+		return {"result": _mock.get_purchase_response(), "error": "", "timed_out": false}
 	var opts = JavaScriptBridge.create_object("Object")
 	opts.productSku = sku
 	var promise = _sdk_payments.beginPurchase(opts)
@@ -343,10 +340,7 @@ func complete_purchase(purchase_token: String) -> Dictionary:
 
 func get_incomplete_purchases() -> Dictionary:
 	if not _is_web:
-		if _mock.is_registered:
-			return {"result": _mock.get_incomplete_purchase_response(), "error": "", "timed_out": false}
-		else:
-			return {"result": "", "error": "login_required", "timed_out": false}
+		return {"result": _mock.get_incomplete_purchase_response(), "error": "", "timed_out": false}
 	var promise = _sdk_payments.getIncompletePurchases()
 	var cb_id := _generate_callback_id()
 	_setup_promise_callback(promise, cb_id, true)
