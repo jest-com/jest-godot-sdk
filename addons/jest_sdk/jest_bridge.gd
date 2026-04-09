@@ -369,7 +369,7 @@ func list_referrals() -> Dictionary:
 	var cb_result := await _wait_for_callback(cb_id, TIMEOUT_DEFAULT)
 	if cb_result["timed_out"] or not cb_result["error"].is_empty():
 		return cb_result
-	# Transform referrals from {reference: [registrations]} to [{reference, registrations}]
+	# Transform referrals from {reference: [{playerId, joinedAt}, ...]} to [{reference, registrations: [{playerId, joinedAt}]}]
 	var parsed = JSON.parse_string(cb_result["result"])
 	if parsed and parsed is Dictionary and parsed.has("referrals") and parsed["referrals"] is Dictionary:
 		var referrals_array: Array = []
