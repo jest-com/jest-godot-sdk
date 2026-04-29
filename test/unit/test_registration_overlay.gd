@@ -1,6 +1,22 @@
 extends GutTest
 ## Tests for the custom registration overlay API.
 
+var _closed := false
+var _closed_count := 0
+
+
+func before_each():
+	_closed = false
+	_closed_count = 0
+
+
+func _mark_closed():
+	_closed = true
+
+
+func _count_closed():
+	_closed_count += 1
+
 
 func test_options_defaults_match_html5_api():
 	var opts := JestRegistrationOverlayOptions.new()
@@ -23,22 +39,20 @@ func test_overlay_show_invokes_on_close_option():
 	var bridge := JestBridge.new()
 	var overlay := JestRegistrationOverlay.new(bridge)
 	var opts := JestRegistrationOverlayOptions.new()
-	var closed := false
-	opts.on_close = func(): closed = true
+	opts.on_close = _mark_closed
 
 	overlay.show(opts)
 
-	assert_true(closed)
+	assert_true(_closed)
 
 
 func test_handle_close_marks_closed_once():
 	var bridge := JestBridge.new()
 	var handle := JestRegistrationOverlayHandle.new(bridge, "conversation-id")
-	var closed_count := 0
-	handle.closed.connect(func(): closed_count += 1)
+	handle.closed.connect(_count_closed)
 
 	handle._on_closed()
 	handle._on_closed()
 
 	assert_true(handle.is_closed)
-	assert_eq(closed_count, 1)
+	assert_eq(_closed_count, 1)
