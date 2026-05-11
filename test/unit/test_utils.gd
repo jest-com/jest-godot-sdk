@@ -64,3 +64,43 @@ func test_parse_json_array_non_array_returns_default():
 func test_parse_json_array_custom_default():
 	var result := JestUtils.parse_json_array("", [1, 2])
 	assert_eq(result.size(), 2)
+
+
+# Bot avatar tests — vectors verified against the JS @textclub/common/prng
+# implementation so all SDKs produce the same avatar for the same username.
+
+func test_get_bot_avatar_default_size():
+	assert_eq(JestUtils.get_bot_avatar("test"), "https://cdn.jest.com/avatar/bot/736.webp")
+
+
+func test_get_bot_avatar_known_vectors():
+	assert_eq(JestUtils.get_bot_avatar(""), "https://cdn.jest.com/avatar/bot/115.webp")
+	assert_eq(JestUtils.get_bot_avatar("a"), "https://cdn.jest.com/avatar/bot/748.webp")
+	assert_eq(JestUtils.get_bot_avatar("alice"), "https://cdn.jest.com/avatar/bot/982.webp")
+	assert_eq(JestUtils.get_bot_avatar("Bob"), "https://cdn.jest.com/avatar/bot/160.webp")
+	assert_eq(JestUtils.get_bot_avatar("bot"), "https://cdn.jest.com/avatar/bot/991.webp")
+	assert_eq(JestUtils.get_bot_avatar("user_42"), "https://cdn.jest.com/avatar/bot/592.webp")
+	assert_eq(JestUtils.get_bot_avatar("hello world"), "https://cdn.jest.com/avatar/bot/256.webp")
+
+
+func test_get_bot_avatar_with_size_wraps_in_cloudflare_proxy():
+	assert_eq(
+		JestUtils.get_bot_avatar("test", 128),
+		"https://cdn.jestpub.com/cdn-cgi/image/format=auto%2Cfit=cover%2Cwidth=128%2C/https%3A%2F%2Fcdn.jest.com%2Favatar%2Fbot%2F736.webp",
+	)
+
+
+func test_get_bot_avatar_buckets_down_intermediate_sizes():
+	# 999 should bucket to 512, 200 to 128, 1 to 64.
+	assert_eq(JestUtils.get_bot_avatar("bot", 999), JestUtils.get_bot_avatar("bot", 512))
+	assert_eq(JestUtils.get_bot_avatar("bot", 200), JestUtils.get_bot_avatar("bot", 128))
+	assert_eq(JestUtils.get_bot_avatar("bot", 1), JestUtils.get_bot_avatar("bot", 64))
+
+
+func test_get_bot_avatar_supplementary_plane_username():
+	# 🎮 (U+1F3AE) — JS encodes as UTF-16 surrogate pair, so the SDK must too.
+	assert_eq(JestUtils.get_bot_avatar("🎮"), "https://cdn.jest.com/avatar/bot/740.webp")
+
+
+func test_get_bot_avatar_is_deterministic():
+	assert_eq(JestUtils.get_bot_avatar("alice"), JestUtils.get_bot_avatar("alice"))

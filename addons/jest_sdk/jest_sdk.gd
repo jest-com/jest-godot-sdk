@@ -100,16 +100,19 @@ func show_registration_overlay(options: JestRegistrationOverlayOptions = null) -
 
 
 ## Opens the privacy policy page.
+## @internal — not part of the supported public API.
 func open_privacy_policy() -> void:
 	_bridge.open_legal_page("privacy")
 
 
 ## Opens the terms of service page.
+## @internal — not part of the supported public API.
 func open_terms_of_service() -> void:
 	_bridge.open_legal_page("terms")
 
 
 ## Opens the copyright page.
+## @internal — not part of the supported public API.
 func open_copyright() -> void:
 	_bridge.open_legal_page("copyright")
 
@@ -153,3 +156,10 @@ func validate_name(name_value: String) -> JestNameValidationResult:
 ## progress: Loading progress from 0 to 100. Setting to 100 dismisses the overlay.
 func set_loading_progress(progress: float) -> void:
 	_bridge.set_loading_progress(progress)
+
+
+## Returns a CDN URL for a bot avatar, deterministically seeded by [param username].
+## Use the smallest [param size] that fits your UI. Supported sizes: 64, 128, 256,
+## 512, 1000 (default). Other values are bucketed down to the next supported size.
+func get_bot_avatar(username: String, size: int = 1000) -> String:
+	return JestUtils.get_bot_avatar(username, size)

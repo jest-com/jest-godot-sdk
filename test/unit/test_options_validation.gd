@@ -43,10 +43,57 @@ func test_notification_missing_cta():
 func test_notification_cta_too_long():
 	var opts := JestNotificationOptions.new()
 	opts.body = "Hello"
-	opts.cta_text = "This CTA text is way too long for the limit"
+	opts.cta_text = "x".repeat(JestNotificationOptions.CTA_CHAR_LIMIT + 1)
 	opts.identifier = "test"
 	opts.scheduled_in_days = 1
-	assert_eq(opts.validate(), "cta_text must be 25 characters or fewer")
+	assert_eq(opts.validate(), "cta_text must be 50 characters or fewer")
+
+
+func test_notification_cta_at_limit_is_valid():
+	var opts := JestNotificationOptions.new()
+	opts.body = "Hello"
+	opts.cta_text = "x".repeat(JestNotificationOptions.CTA_CHAR_LIMIT)
+	opts.identifier = "test"
+	opts.scheduled_in_days = 1
+	assert_eq(opts.validate(), "")
+
+
+func test_notification_body_too_long():
+	var opts := JestNotificationOptions.new()
+	opts.body = "x".repeat(JestNotificationOptions.BODY_CHAR_LIMIT + 1)
+	opts.cta_text = "Play"
+	opts.identifier = "test"
+	opts.scheduled_in_days = 1
+	assert_eq(opts.validate(), "body must be 2000 characters or fewer")
+
+
+func test_notification_body_at_limit_is_valid():
+	var opts := JestNotificationOptions.new()
+	opts.body = "x".repeat(JestNotificationOptions.BODY_CHAR_LIMIT)
+	opts.cta_text = "Play"
+	opts.identifier = "test"
+	opts.scheduled_in_days = 1
+	assert_eq(opts.validate(), "")
+
+
+func test_notification_title_too_long():
+	var opts := JestNotificationOptions.new()
+	opts.body = "Hello"
+	opts.title = "x".repeat(JestNotificationOptions.TITLE_CHAR_LIMIT + 1)
+	opts.cta_text = "Play"
+	opts.identifier = "test"
+	opts.scheduled_in_days = 1
+	assert_eq(opts.validate(), "title must be 200 characters or fewer")
+
+
+func test_notification_title_at_limit_is_valid():
+	var opts := JestNotificationOptions.new()
+	opts.body = "Hello"
+	opts.title = "x".repeat(JestNotificationOptions.TITLE_CHAR_LIMIT)
+	opts.cta_text = "Play"
+	opts.identifier = "test"
+	opts.scheduled_in_days = 1
+	assert_eq(opts.validate(), "")
 
 
 func test_notification_missing_identifier():
