@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.5.1] - 2026-05-15
+
+### Added
+- `JestSDK.social` — groups profile and avatar helpers to match the HTML5 SDK's
+  social module. Includes:
+  - `JestSDK.social.get_profile(avatar_size = 1000)` — returns a Dictionary with
+    `username` and a resized `avatar_url`.
+  - `JestSDK.social.get_player_avatar(size = 1000)` — returns only the current
+    player's resized avatar URL.
+  - `JestSDK.social.get_bot_avatar(username, size = 1000)` — returns a
+    deterministic bot avatar URL.
+  Sizes accept 64, 128, 256, 512, or 1000; intermediate values bucket down to
+  the next supported size. Localhost player avatar URLs pass through unwrapped
+  because Cloudflare can't fetch them in dev.
+- Root `JestSDK.get_player_avatar(...)` and `JestSDK.get_bot_avatar(...)` remain
+  compatibility aliases for the social module.
+
 ## [1.5.0] - 2026-05-13
 
 ### Added
