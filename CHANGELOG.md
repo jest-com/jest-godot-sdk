@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.5.0] - 2026-05-13
+
+### Added
+- `JestSDK.get_player_avatar(size = 1000)` — returns a CDN URL for the current
+  player's avatar, routed through Cloudflare Image Resizing so Godot receives a
+  decodable image format instead of the raw bucket file. Returns an empty string
+  when the player has no avatar. `size` accepts 64, 128, 256, 512, or 1000;
+  intermediate values bucket down to the next supported size. Localhost URLs are
+  passed through unwrapped (Cloudflare can't fetch them in dev). Mirrors the
+  HTML5 SDK's `social.getProfile({ avatarSize })`.
+
+### Changed
+- Sized avatar URLs now request `format=webp` from Cloudflare instead of
+  `format=auto`, avoiding browser-dependent AVIF responses in Godot.
+- Web exports pass the Godot SDK version through `JestSDK.init` instead of
+  patching `window.parent.postMessage`.
+
+## [1.4.1] - 2026-05-12
+
+### Changed
+- `JestSDK.get_bot_avatar()` URL path changed from
+  `cdn.jest.com/avatar/bot/<N>.webp` to `cdn.jest.com/avatars/bot/<N>.webp`,
+  aligning with player avatars (`cdn.jest.com/avatars/<uuid>.webp`) so both
+  live under a single `/avatars/*` prefix. The platform-side migration must
+  run before this SDK is shipped, or `get_bot_avatar()` will return URLs
+  that 404.
+
 ## [1.4.0] - 2026-05-07
 
 ### Added

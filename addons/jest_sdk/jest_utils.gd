@@ -2,7 +2,7 @@ class_name JestUtils
 extends RefCounted
 
 const _CLOUDFLARE_IMAGE_PROXY := "https://cdn.jestpub.com/cdn-cgi/image/"
-const _BOT_AVATAR_BASE_URL := "https://cdn.jest.com/avatar/bot/"
+const _BOT_AVATAR_BASE_URL := "https://cdn.jest.com/avatars/bot/"
 const _AVAILABLE_AVATARS := 1000
 const _U32_MASK := 0xFFFFFFFF
 
@@ -18,6 +18,19 @@ static func get_bot_avatar(username: String, size: int = 1000) -> String:
 	if bucketed >= _AVAILABLE_AVATARS:
 		return bot_url
 	return _build_cloudflare_image_url(bot_url, bucketed)
+
+
+## Wraps a raw player avatar URL through the Cloudflare image proxy at the given
+## [param size]. Used by [JestSDKSingleton.get_player_avatar] to return a URL that
+## avoids AVIF negotiation in Godot. Returns an empty string
+## when [param avatar_url] is empty, and the URL unchanged when it points at
+## localhost (Cloudflare can't fetch those in dev).
+static func get_player_avatar(avatar_url: String, size: int = 1000) -> String:
+	if avatar_url.is_empty():
+		return ""
+	if avatar_url.begins_with("http://localhost") or avatar_url.begins_with("https://localhost"):
+		return avatar_url
+	return _build_cloudflare_image_url(avatar_url, _bucket_bot_avatar_size(size))
 
 
 static func _bucket_bot_avatar_size(size: int) -> int:
@@ -69,7 +82,7 @@ static func _to_utf16_units(s: String) -> PackedInt32Array:
 
 
 static func _build_cloudflare_image_url(image_url: String, width: int) -> String:
-	return "%sformat=auto%%2Cfit=cover%%2Cwidth=%d%%2C/%s" % [
+	return "%sformat=webp%%2Cfit=cover%%2Cwidth=%d%%2C/%s" % [
 		_CLOUDFLARE_IMAGE_PROXY,
 		width,
 		image_url.uri_encode(),
