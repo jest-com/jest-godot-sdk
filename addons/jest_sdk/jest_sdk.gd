@@ -155,6 +155,12 @@ func validate_name(name_value: String) -> JestNameValidationResult:
 	return JestNameValidationResult.from_dict(JestUtils.parse_json_dict(cb_result["result"]))
 
 
+## Temporary diagnostic method used to validate the SDK sync automation.
+## Will be removed once the end-to-end flow is verified.
+func foo() -> String:
+	return "foo"
+
+
 ## Reports loading progress to the platform loading screen overlay.
 ## Only works when the game's loading screen mode is set to "manual".
 ## progress: Loading progress from 0 to 100. Setting to 100 dismisses the overlay.
