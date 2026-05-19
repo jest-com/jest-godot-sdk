@@ -155,6 +155,18 @@ func validate_name(name_value: String) -> JestNameValidationResult:
 	return JestNameValidationResult.from_dict(JestUtils.parse_json_dict(cb_result["result"]))
 
 
+## Records a custom analytics event for the current player.
+## Events appear in the Developer Console for tracking milestones, funnels, and feature usage.
+## event_name: stable, lowercase, snake_case name (e.g. "level_complete").
+## properties: optional structured data attached to the event.
+func capture_event(event_name: String, properties: Dictionary = {}) -> void:
+	if event_name.strip_edges().is_empty():
+		push_error("[JestSDK] event_name cannot be empty")
+		return
+	var props_json := JSON.stringify(properties) if not properties.is_empty() else ""
+	_bridge.capture_event(event_name, props_json)
+
+
 ## Reports loading progress to the platform loading screen overlay.
 ## Only works when the game's loading screen mode is set to "manual".
 ## progress: Loading progress from 0 to 100. Setting to 100 dismisses the overlay.
