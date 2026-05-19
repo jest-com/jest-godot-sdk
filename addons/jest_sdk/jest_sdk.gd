@@ -162,6 +162,14 @@ func set_loading_progress(progress: float) -> void:
 	_bridge.set_loading_progress(progress)
 
 
+## Returns the current player's profile (username and sized avatar URL).
+## Mirrors the HTML5 SDK's [code]social.getProfile({ avatarSize })[/code].
+## Supported sizes: 64, 128, 256, 512, 1000 (default). Other values are
+## bucketed down to the next supported size.
+func get_profile(avatar_size: int = 1000) -> JestPlayerProfile:
+	return social.get_profile(avatar_size)
+
+
 ## Returns a CDN URL for a bot avatar, deterministically seeded by [param username].
 ## Use the smallest [param size] that fits your UI. Supported sizes: 64, 128, 256,
 ## 512, 1000 (default). Other values are bucketed down to the next supported size.
@@ -169,11 +177,11 @@ func get_bot_avatar(username: String, size: int = 1000) -> String:
 	return social.get_bot_avatar(username, size)
 
 
+## [b]Deprecated.[/b] Use [code]get_profile(size).avatar_url[/code] instead.
 ## Returns a CDN URL for the current player's avatar at the requested [param size],
 ## routed through Cloudflare Image Resizing so Godot can decode it reliably.
 ## Returns an empty string when the player has no avatar.
 ## Supported sizes: 64, 128, 256, 512, 1000 (default). Intermediate values bucket
-## down to the next supported size. Mirrors the HTML5 SDK's
-## [code]social.getProfile({ avatarSize })[/code].
+## down to the next supported size.
 func get_player_avatar(size: int = 1000) -> String:
 	return social.get_player_avatar(size)
