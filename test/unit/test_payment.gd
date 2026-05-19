@@ -60,3 +60,26 @@ func test_get_incomplete_purchases():
 	assert_true(result.ok)
 	assert_false(result.has_more)
 	assert_eq(result.purchases.size(), 0)
+
+
+func test_begin_subscription_success():
+	bridge._mock.mock_subscription_succeeds = true
+	var result = await payment.begin_subscription("premium_monthly")
+	assert_true(result is JestSubscriptionResult)
+	assert_true(result.ok)
+	assert_eq(result.status, JestSubscriptionResult.Status.SUCCESS)
+	assert_not_null(result.subscription)
+	assert_eq(result.subscription.sku, "premium_monthly")
+
+
+func test_begin_subscription_cancel():
+	bridge._mock.mock_subscription_succeeds = false
+	var result = await payment.begin_subscription("premium_monthly")
+	assert_false(result.ok)
+	assert_eq(result.status, JestSubscriptionResult.Status.CANCELED)
+
+
+func test_begin_subscription_empty_sku():
+	var result = await payment.begin_subscription("")
+	assert_false(result.ok)
+	assert_eq(result.error, "invalid_sku")
