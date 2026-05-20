@@ -75,6 +75,20 @@ func begin_subscription(sku: String) -> JestSubscriptionResult:
 	return JestSubscriptionResult.from_dict(d)
 
 
+## Retrieves subscription offers and the player's current entitlement on each.
+## Must be awaited: var result = await JestSDK.payment.get_subscriptions()
+## [br]For guest players, result.subscriptions is empty.
+## [br]Verify result.signed server-side for any entitlement grant.
+func get_subscriptions() -> JestSubscriptionsResult:
+	var cb_result: Dictionary = await _bridge.get_subscriptions()
+	if cb_result["timed_out"]:
+		return JestSubscriptionsResult.make_error("timeout")
+	if not cb_result["error"].is_empty():
+		return JestSubscriptionsResult.make_error(cb_result["error"])
+	var d := JestUtils.parse_json_dict(cb_result["result"])
+	return JestSubscriptionsResult.from_dict(d)
+
+
 ## Retrieves incomplete purchases that have not yet been completed.
 ## Must be awaited: var result = await JestSDK.payment.get_incomplete_purchases()
 func get_incomplete_purchases() -> JestIncompletePurchasesResult:
