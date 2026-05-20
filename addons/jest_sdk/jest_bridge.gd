@@ -302,6 +302,18 @@ func set_loading_progress(progress: float) -> void:
 	_sdk.setLoadingProgress(clamped)
 
 
+func capture_event(event_name: String, properties_json: String) -> void:
+	if not _is_web:
+		_mock.capture_event(event_name, properties_json)
+		return
+	if properties_json.is_empty():
+		_sdk.captureEvent(event_name)
+	else:
+		var props = _parse_json_to_js(properties_json)
+		if props != null:
+			_sdk.captureEvent(event_name, props)
+
+
 func send_reserved_login_message(reservation_json: String) -> void:
 	if not _is_web:
 		if _verbose:
