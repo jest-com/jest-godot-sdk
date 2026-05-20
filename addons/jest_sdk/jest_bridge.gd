@@ -388,6 +388,15 @@ func begin_subscription(sku: String) -> Dictionary:
 	return await _wait_for_callback(cb_id, TIMEOUT_PURCHASE)
 
 
+func get_subscriptions() -> Dictionary:
+	if not _is_web:
+		return {"result": _mock.get_subscriptions_response(), "error": "", "timed_out": false}
+	var promise = _sdk_payments.getSubscriptions()
+	var cb_id := _generate_callback_id()
+	_setup_promise_callback(promise, cb_id, true)
+	return await _wait_for_callback(cb_id, TIMEOUT_DEFAULT)
+
+
 func open_referral_dialog(options_json: String) -> Dictionary:
 	if not _is_web:
 		_mock.open_referral_dialog(options_json)
