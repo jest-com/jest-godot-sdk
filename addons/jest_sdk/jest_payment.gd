@@ -89,6 +89,26 @@ func get_subscriptions() -> JestSubscriptionsResult:
 	return JestSubscriptionsResult.from_dict(d)
 
 
+## Opens a cancellation confirmation dialog for the specified subscription.
+## Must be awaited: var result = await JestSDK.payment.cancel_subscription("premium_monthly")
+## [br]If the user confirms, the subscription is cancelled at the end of the current billing period.
+func cancel_subscription(sku: String) -> JestCancelSubscriptionResult:
+	if sku.strip_edges().is_empty():
+		return JestCancelSubscriptionResult.make_error("invalid_sku")
+	var cb_result: Dictionary = await _bridge.cancel_subscription(sku)
+	if cb_result["timed_out"]:
+		return JestCancelSubscriptionResult.make_error("timeout")
+	if not cb_result["error"].is_empty():
+		return JestCancelSubscriptionResult.make_error(cb_result["error"])
+	var json_str: String = cb_result["result"]
+	if json_str.is_empty():
+		return JestCancelSubscriptionResult.make_error("empty_response")
+	var d := JestUtils.parse_json_dict(json_str)
+	if d.is_empty():
+		return JestCancelSubscriptionResult.make_error("parse_error")
+	return JestCancelSubscriptionResult.from_dict(d)
+
+
 ## Retrieves incomplete purchases that have not yet been completed.
 ## Must be awaited: var result = await JestSDK.payment.get_incomplete_purchases()
 func get_incomplete_purchases() -> JestIncompletePurchasesResult:
