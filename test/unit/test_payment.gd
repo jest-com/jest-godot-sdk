@@ -83,3 +83,24 @@ func test_begin_subscription_empty_sku():
 	var result = await payment.begin_subscription("")
 	assert_false(result.ok)
 	assert_eq(result.error, "invalid_sku")
+
+
+func test_cancel_subscription_success():
+	bridge._mock.mock_cancel_subscription_succeeds = true
+	var result = await payment.cancel_subscription("premium_monthly")
+	assert_true(result is JestCancelSubscriptionResult)
+	assert_true(result.ok)
+	assert_eq(result.status, JestCancelSubscriptionResult.Status.SUCCESS)
+
+
+func test_cancel_subscription_cancel():
+	bridge._mock.mock_cancel_subscription_succeeds = false
+	var result = await payment.cancel_subscription("premium_monthly")
+	assert_false(result.ok)
+	assert_eq(result.status, JestCancelSubscriptionResult.Status.CANCELED)
+
+
+func test_cancel_subscription_empty_sku():
+	var result = await payment.cancel_subscription("")
+	assert_false(result.ok)
+	assert_eq(result.error, "invalid_sku")
