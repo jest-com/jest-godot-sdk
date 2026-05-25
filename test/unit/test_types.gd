@@ -122,6 +122,31 @@ func test_purchase_result_make_error():
 	assert_eq(r.error, "timeout")
 
 
+# --- JestSubscription ---
+
+func test_subscription_from_dict():
+	var d := {
+		"sku": "premium",
+		"displayName": "Premium",
+		"displayDescription": "Unlock everything",
+		"status": "active",
+		"price": 9.99,
+		"currency": "USD",
+		"billingPeriod": "monthly",
+		"estimatedRevenue": 6.69
+	}
+	var s := JestSubscription.from_dict(d)
+	assert_eq(s.sku, "premium")
+	assert_eq(s.status, "active")
+	assert_eq(s.billing_period, "monthly")
+	assert_almost_eq(s.estimated_revenue, 6.69, 0.001)
+
+
+func test_subscription_from_dict_missing_estimated_revenue():
+	var s := JestSubscription.from_dict({"sku": "basic"})
+	assert_eq(s.estimated_revenue, 0.0)
+
+
 # --- JestSignedPlayer ---
 
 func test_signed_player_from_dict():
