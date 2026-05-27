@@ -1,0 +1,104 @@
+name: Build Regression Web Export
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Tag/version (e.g. v1.7.1)"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.3
+  GODOT_RELEASE: stable
+  GODOT_TEMPLATES_DIR: 4.3.stable
+  EXPORT_PRESET: JestSDKRegression
+  REGRESSION_BUILD_DIR: build/regression-web
+  REGRESSION_ZIP: jest-godot-sdk-regression-web.zip
+  REGRESSION_ZIP_INNER_DIR: jest-godot-sdk-regression-web
+
+jobs:
+  build:
+    name: Headless Godot Web Export
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag_name }}
+
+      - name: Install Godot
+        run: |
+          set -euxo pipefail
+          GODOT_TAG="${GODOT_VERSION}-${GODOT_RELEASE}"
+          curl -fL -o godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_TAG}/Godot_v${GODOT_TAG}_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_TAG}_linux.x86_64" /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+          godot --version
+
+      - name: Install Web export templates
+        run: |
+          set -euxo pipefail
+          GODOT_TAG="${GODOT_VERSION}-${GODOT_RELEASE}"
+          curl -fL -o templates.tpz \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_TAG}/Godot_v${GODOT_TAG}_export_templates.tpz"
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_TEMPLATES_DIR}"
+          unzip -q templates.tpz
+          mv templates/* "$HOME/.local/share/godot/export_templates/${GODOT_TEMPLATES_DIR}/"
+
+      - name: Pre-import project resources
+        run: godot --headless --import || true
+
+      - name: Export regression Web build
+        run: |
+          set -euxo pipefail
+          mkdir -p "${REGRESSION_BUILD_DIR}"
+          godot --headless --export-release "${EXPORT_PRESET}" "${REGRESSION_BUILD_DIR}/index.html"
+          ls -la "${REGRESSION_BUILD_DIR}"
+
+      - name: Verify export produced expected files
+        run: |
+          set -euxo pipefail
+          for f in index.html index.js index.wasm index.pck; do
+            test -s "${REGRESSION_BUILD_DIR}/$f" || { echo "Missing or empty: ${REGRESSION_BUILD_DIR}/$f"; exit 1; }
+          done
+          grep -q "Jest SDK" "${REGRESSION_BUILD_DIR}/index.html"
+          grep -q "__jestSdkVersion" "${REGRESSION_BUILD_DIR}/index.html"
+
+      - name: Package regression fixture
+        run: |
+          set -euxo pipefail
+          mkdir -p "staging/${REGRESSION_ZIP_INNER_DIR}"
+          cp -r "${REGRESSION_BUILD_DIR}/." "staging/${REGRESSION_ZIP_INNER_DIR}/"
+          (cd staging && zip -r "../${REGRESSION_ZIP}" "${REGRESSION_ZIP_INNER_DIR}")
+
+      - name: Upload as workflow artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.REGRESSION_ZIP }}
+          path: ${{ env.REGRESSION_ZIP }}
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Attach zip to manually selected release
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag_name }}
+          files: ${{ env.REGRESSION_ZIP }}
+          fail_on_unmatched_files: true
+
+      - name: Attach zip to published release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: ${{ env.REGRESSION_ZIP }}
+          fail_on_unmatched_files: true
