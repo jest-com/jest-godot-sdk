@@ -141,3 +141,7 @@ func get_player_signed_response() -> String:
 
 func capture_event(event_name: String, properties_json: String) -> void:
 	_log("capture_event(%s): %s" % [event_name, properties_json])
+
+
+func mark_game_loaded() -> void:
+	_log("mark_game_loaded")

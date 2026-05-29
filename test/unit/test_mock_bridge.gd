@@ -137,3 +137,9 @@ func test_schedule_notification():
 	mock.schedule_notification_v2('{"body":"test","identifier":"id1"}')
 	assert_eq(mock._notifications.size(), 1)
 	assert_eq(mock._notifications[0]["identifier"], "id1")
+
+
+# --- mark_game_loaded ---
+
+func test_mark_game_loaded_does_not_crash():
+	mock.mark_game_loaded()
