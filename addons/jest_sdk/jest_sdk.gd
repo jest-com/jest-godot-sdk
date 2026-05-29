@@ -174,6 +174,13 @@ func set_loading_progress(progress: float) -> void:
 	_bridge.set_loading_progress(progress)
 
 
+## Signals that the game is ready to be played — all assets have loaded and the
+## player can interact. Also dismisses the manual loading overlay unless progress
+## 100 was already sent. Safe to call at any time; calls after the first are no-ops.
+func mark_game_loaded() -> void:
+	_bridge.mark_game_loaded()
+
+
 ## Returns the current player's profile (username and sized avatar URL).
 ## Mirrors the HTML5 SDK's [code]social.getProfile({ avatarSize })[/code].
 ## Supported sizes: 64, 128, 256, 512, 1000 (default). Other values are
