@@ -410,5 +410,15 @@ func _post_message(payload: Dictionary) -> void:
 	if not OS.has_feature("web"):
 		print("[JestSDK Regression] %s" % JSON.stringify(payload))
 		return
-	var js := "window.parent.postMessage(%s, '*');" % JSON.stringify(payload)
-	JavaScriptBridge.eval(js)
+	if _window == null:
+		_window = JavaScriptBridge.get_interface("window")
+	if _json == null:
+		_json = JavaScriptBridge.get_interface("JSON")
+	if _window == null or _json == null:
+		push_error("[JestSDK Regression] JavaScript bridge unavailable")
+		return
+	var js_payload = _json.parse(JSON.stringify(payload))
+	if js_payload == null:
+		push_error("[JestSDK Regression] Failed to encode message payload")
+		return
+	_window.parent.postMessage(js_payload, "*")

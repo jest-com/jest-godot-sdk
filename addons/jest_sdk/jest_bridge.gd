@@ -74,7 +74,8 @@ func init_sdk(options: Dictionary = {}) -> bool:
 	for key in options:
 		init_opts[key] = options[key]
 	if not options.has("sdkVersion"):
-		var sdk_version = JavaScriptBridge.eval("window.__jestSdkVersion || '%s';" % SDK_VERSION_FALLBACK)
+		var window = JavaScriptBridge.get_interface("window")
+		var sdk_version = window.__jestSdkVersion if window != null else null
 		if sdk_version is String:
 			init_opts["sdkVersion"] = sdk_version
 		else:
