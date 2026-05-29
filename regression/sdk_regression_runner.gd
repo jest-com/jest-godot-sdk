@@ -300,7 +300,6 @@ func _run_referrals_share(command: Dictionary) -> Array[Dictionary]:
 	referral.entry_payload = options.get("entryPayloadExpected", {})
 	referral.share_title = "Godot regression"
 	referral.share_text = "Join this Godot regression run"
-	referral.onboarding_slug = "sdk-regression"
 	referral.notification_templates = [
 		{
 			"minConversionCount": 1,

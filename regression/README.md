@@ -22,7 +22,7 @@ project update.
 - `social`: local bot/profile/avatar helpers. These are host-free in Godot.
 - `referrals-read`: referral listing.
 - `referrals-share`: share dialog with reference, entry payload, share text,
-  onboarding slug, and notification templates.
+  and notification templates.
 - `internal`: feature flag lookup, name validation, and onboarding event capture.
 - `legal`: privacy, terms, and copyright openers.
 - `guardrails`: validation paths that should not call the host.
