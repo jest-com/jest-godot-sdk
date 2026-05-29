@@ -153,6 +153,18 @@ func test_referral_missing_reference():
 	assert_eq(opts.validate(), "reference cannot be empty")
 
 
+func test_referral_with_share_image():
+	var opts := JestReferralOptions.new()
+	opts.reference = "campaign_1"
+	opts.share_image = "data:image/png;base64,iVBORw0KGgo="
+	assert_eq(opts.validate(), "")
+
+
+func test_referral_share_image_defaults_empty():
+	var opts := JestReferralOptions.new()
+	assert_eq(opts.share_image, "")
+
+
 # --- JestLoginMessageOptions ---
 
 func test_login_message_valid():
