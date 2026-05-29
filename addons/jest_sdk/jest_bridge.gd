@@ -136,7 +136,8 @@ func get_player_id() -> String:
 func get_player_data() -> String:
 	if not _is_web:
 		return _mock.player_data
-	var result = _json.stringify(_sdk.getPlayer())
+	var data = _data_helper.getPlayerData() if _data_helper != null else _sdk.getPlayerData()
+	var result = _json.stringify(data)
 	return result if result is String else "{}"
 
 
