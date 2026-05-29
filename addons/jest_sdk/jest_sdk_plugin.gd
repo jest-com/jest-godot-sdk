@@ -73,6 +73,9 @@ window.__jestDataHelper = {
 	getValue: function(k) { return window.JestSDK.data.get(k); },
 	setValue: function(k, v) { window.JestSDK.data.set(k, v); },
 	deleteValue: function(k) { window.JestSDK.data.delete(k); },
+	getPlayerData: function() {
+		return window.JestSDK.getPlayerData ? window.JestSDK.getPlayerData() : window.JestSDK.data.getAll();
+	},
 	getAll: function() { return window.JestSDK.data.getAll(); },
 	flush: function() { return window.JestSDK.data.flush(); }
 };
