@@ -15,7 +15,7 @@ var price: float = 0.0
 var currency: String = ""
 ## Billing period: "monthly", "yearly", or "weekly".
 var billing_period: String = ""
-## Approximate revenue in USD for the game publisher per billing period.
+## @deprecated Always 0. Kept for SDK backwards compatibility.
 var estimated_revenue: float = 0.0
 
 

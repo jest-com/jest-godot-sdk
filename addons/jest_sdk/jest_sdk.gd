@@ -83,17 +83,19 @@ func get_entry_payload() -> Dictionary:
 	return JestUtils.parse_json_dict(_bridge.get_entry_payload())
 
 
-## Triggers the platform login flow. This is asynchronous and managed by
-## the Jest platform. The player's registered state will be updated when
-## login completes. Use player.is_registered to check status.
+## Triggers the platform login flow and awaits the player dismissing the login
+## popup. Resolves immediately if the player is already registered. The player's
+## registered state is refreshed once login completes; use player.is_registered
+## to check status.
+## Should be awaited: await JestSDK.login()
 func login(payload: Dictionary = {}) -> void:
 	if player.is_registered:
-		push_warning("[JestSDK] Player is already logged in")
+		# Already registered — nothing to log into; resolve immediately.
 		return
 	var payload_string := ""
 	if not payload.is_empty():
 		payload_string = JSON.stringify(payload)
-	_bridge.login(payload_string)
+	await _bridge.login(payload_string)
 	player.invalidate_cache()
 
 
