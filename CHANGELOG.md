@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.9.0] - 2026-06-05
+
+### Changed
+- `JestSDK.login()` is now a coroutine that resumes when the player dismisses the
+  login popup, or immediately when the player is already registered. `await` it to
+  run code after the flow completes; fire-and-forget callers are unaffected.
+
+### Added
+- `JestUtils.texture_to_data_url(texture)` / `JestUtils.image_to_data_url(image)` —
+  encode a texture or image to a PNG base64 data URL (for image fields such as the
+  referral `share_image`). Compressed images are decompressed first.
+
+### Deprecated
+- `JestSubscription.estimated_revenue` — always `0`. Kept for backwards
+  compatibility and will be removed in a future release.
+
 ## [1.5.1] - 2026-05-15
 
 ### Added
