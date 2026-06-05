@@ -213,19 +213,27 @@ func set_player_data_bulk(data_json: String) -> void:
 			_data_helper.setValue(key, d[key])
 
 
-func login(payload: String) -> void:
+## Awaits the JS SDK login promise, which resolves when the player dismisses the
+## login popup (or immediately for already-registered players). Returns the
+## standard async result Dictionary: {result, error, timed_out}.
+func login(payload: String) -> Dictionary:
 	if not _is_web:
 		_mock.login(payload)
-		return
+		return {"result": "", "error": "", "timed_out": false}
+	var promise
 	if payload.is_empty():
-		_sdk.login()
+		promise = _sdk.login()
 	else:
 		var parsed = _parse_json_to_js(payload)
 		if parsed == null:
-			return
+			return {"result": "", "error": "invalid_json", "timed_out": false}
 		var opts = JavaScriptBridge.create_object("Object")
 		opts.entryPayload = parsed
-		_sdk.login(opts)
+		promise = _sdk.login(opts)
+	var cb_id := _generate_callback_id()
+	_setup_promise_callback(promise, cb_id)
+	# No timeout: login resolves only when the user dismisses the popup.
+	return await _wait_for_callback(cb_id, TIMEOUT_NONE)
 
 
 func open_legal_page(page: String) -> void:

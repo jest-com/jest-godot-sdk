@@ -113,3 +113,27 @@ static func parse_json_array(json_str: String, default: Array = []) -> Array:
 	if result is Array:
 		return result
 	return default
+
+
+## Encodes a [Texture2D] as a PNG base64 data URL ("data:image/png;base64,...").
+## Suitable for SDK fields that accept an image data URL (e.g. a referral share image).
+## Returns "" when [param texture] is null or cannot be encoded.
+static func texture_to_data_url(texture: Texture2D) -> String:
+	if texture == null:
+		return ""
+	return image_to_data_url(texture.get_image())
+
+
+## Encodes an [Image] as a PNG base64 data URL ("data:image/png;base64,...").
+## Compressed images are decompressed first (save_png_to_buffer needs an uncompressed
+## format). Returns "" when [param image] is null/empty or cannot be encoded.
+static func image_to_data_url(image: Image) -> String:
+	if image == null or image.is_empty():
+		return ""
+	if image.is_compressed() and image.decompress() != OK:
+		push_error("[JestSDK] Could not decompress image for data URL encoding")
+		return ""
+	var png_bytes := image.save_png_to_buffer()
+	if png_bytes.is_empty():
+		return ""
+	return "data:image/png;base64," + Marshalls.raw_to_base64(png_bytes)

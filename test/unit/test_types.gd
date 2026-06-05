@@ -65,7 +65,7 @@ func test_purchase_from_dict():
 		"credits": 99.0,
 		"createdAt": 1700000000,
 		"completedAt": 1700000100,
-		"estimatedRevenue": 69.30
+		"estimatedRevenue": 0
 	}
 	var p := JestPurchase.from_dict(d)
 	assert_eq(p.purchase_token, "tok_123")
@@ -73,13 +73,13 @@ func test_purchase_from_dict():
 	assert_eq(p.credits, 99.0)
 	assert_eq(p.created_at, 1700000000)
 	assert_eq(p.completed_at, 1700000100)
-	assert_eq(p.estimated_revenue, 69.30)
+	# estimated_revenue is deprecated and always 0.
+	assert_eq(p.estimated_revenue, 0.0)
 
 
 func test_purchase_decimal_credits():
-	var p := JestPurchase.from_dict({"credits": 1.50, "estimatedRevenue": 0.75})
+	var p := JestPurchase.from_dict({"credits": 1.50})
 	assert_eq(p.credits, 1.50)
-	assert_eq(p.estimated_revenue, 0.75)
 
 
 func test_purchase_null_completed_at():
@@ -133,18 +133,81 @@ func test_subscription_from_dict():
 		"price": 9.99,
 		"currency": "USD",
 		"billingPeriod": "monthly",
-		"estimatedRevenue": 6.69
+		"estimatedRevenue": 0
 	}
 	var s := JestSubscription.from_dict(d)
 	assert_eq(s.sku, "premium")
 	assert_eq(s.status, "active")
 	assert_eq(s.billing_period, "monthly")
-	assert_almost_eq(s.estimated_revenue, 6.69, 0.001)
+	# estimated_revenue is deprecated and always 0.
+	assert_eq(s.estimated_revenue, 0.0)
 
 
 func test_subscription_from_dict_missing_estimated_revenue():
 	var s := JestSubscription.from_dict({"sku": "basic"})
 	assert_eq(s.estimated_revenue, 0.0)
+
+
+# --- JestSubscriptionResult ---
+
+func test_subscription_result_success():
+	var d := {
+		"result": "success",
+		"subscription": {"sku": "premium_monthly", "status": "active"},
+		"subscriptionSigned": "jwt_here"
+	}
+	var r := JestSubscriptionResult.from_dict(d)
+	assert_true(r.ok)
+	assert_eq(r.status, JestSubscriptionResult.Status.SUCCESS)
+	assert_eq(r.subscription.sku, "premium_monthly")
+	assert_eq(r.subscription_signed, "jwt_here")
+
+
+func test_subscription_result_cancel():
+	var r := JestSubscriptionResult.from_dict({"result": "cancel"})
+	assert_false(r.ok)
+	assert_eq(r.status, JestSubscriptionResult.Status.CANCELED)
+	assert_eq(r.error, "subscription_canceled")
+
+
+func test_subscription_result_error_passthrough():
+	# Domain error codes forwarded by the checkout bridge must reach the game verbatim.
+	for code in ["internal_error", "invalid_subscription", "already_subscribed", "guest_not_allowed"]:
+		var r := JestSubscriptionResult.from_dict({"result": "error", "error": code})
+		assert_false(r.ok)
+		assert_eq(r.status, JestSubscriptionResult.Status.ERROR)
+		assert_eq(r.error, code)
+
+
+func test_subscription_result_error_missing_code_defaults():
+	var r := JestSubscriptionResult.from_dict({"result": "error"})
+	assert_false(r.ok)
+	assert_eq(r.status, JestSubscriptionResult.Status.ERROR)
+	assert_eq(r.error, "unknown_error")
+
+
+# --- JestCancelSubscriptionResult ---
+
+func test_cancel_subscription_result_success():
+	var r := JestCancelSubscriptionResult.from_dict({"result": "success"})
+	assert_true(r.ok)
+	assert_eq(r.status, JestCancelSubscriptionResult.Status.SUCCESS)
+
+
+func test_cancel_subscription_result_cancel():
+	var r := JestCancelSubscriptionResult.from_dict({"result": "cancel"})
+	assert_false(r.ok)
+	assert_eq(r.status, JestCancelSubscriptionResult.Status.CANCELED)
+	assert_eq(r.error, "cancellation_dismissed")
+
+
+func test_cancel_subscription_result_error_passthrough():
+	# Domain error codes forwarded by the checkout bridge must reach the game verbatim.
+	for code in ["internal_error", "not_found", "not_active", "guest_not_allowed"]:
+		var r := JestCancelSubscriptionResult.from_dict({"result": "error", "error": code})
+		assert_false(r.ok)
+		assert_eq(r.status, JestCancelSubscriptionResult.Status.ERROR)
+		assert_eq(r.error, code)
 
 
 # --- JestSignedPlayer ---
