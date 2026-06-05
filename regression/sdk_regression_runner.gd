@@ -264,10 +264,24 @@ func _run_notifications(run_id: String) -> Array[Dictionary]:
 	JestSDK.notifications.schedule(options)
 	JestSDK.notifications.unschedule(identifier)
 
+	var interactive := JestInteractiveNotificationOptions.new()
+	interactive.messages = [
+		{"key": "q1", "body": "Godot regression step", "options": [
+			{"key": "ok", "label": "OK"},
+		]},
+		{"key": "done", "body": "Thanks for playing", "ctaText": "Play"},
+	]
+	interactive.entry_payload = {"engine": ENGINE, "runId": run_id}
+	interactive.scheduled_in_days = 1
+	JestSDK.notifications.experimental.schedule_interactive(interactive)
+
 	var invalid := JestNotificationOptions.new()
+	var invalid_interactive := JestInteractiveNotificationOptions.new()
 	return [
 		_assert_eq("valid notification options", options.validate(), ""),
 		_assert_eq("invalid notification options rejected", invalid.validate(), "body is required"),
+		_assert_eq("valid interactive notification options", interactive.validate(), ""),
+		_assert_eq("invalid interactive notification options rejected", invalid_interactive.validate(), "at least one message is required"),
 	]
 
 

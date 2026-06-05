@@ -176,3 +176,108 @@ func test_login_message_valid():
 func test_login_message_missing():
 	var opts := JestLoginMessageOptions.new()
 	assert_eq(opts.validate(), "message is required")
+
+
+# --- JestInteractiveNotificationOptions ---
+
+func _make_interactive_opts() -> JestInteractiveNotificationOptions:
+	var opts := JestInteractiveNotificationOptions.new()
+	opts.messages = [
+		{"key": "q1", "body": "Which do you prefer?", "options": [
+			{"key": "a", "label": "Option A"},
+			{"key": "b", "label": "Option B"},
+		]},
+		{"key": "done", "body": "Thanks for playing", "ctaText": "Play"},
+	]
+	opts.scheduled_in_days = 1
+	return opts
+
+
+func test_interactive_valid_with_days():
+	var opts := _make_interactive_opts()
+	assert_eq(opts.validate(), "")
+
+
+func test_interactive_valid_with_date():
+	var opts := _make_interactive_opts()
+	opts.scheduled_in_days = 0
+	var tomorrow := Time.get_unix_time_from_system() + 86400
+	opts.date = Time.get_datetime_string_from_unix_time(int(tomorrow))
+	assert_eq(opts.validate(), "")
+
+
+func test_interactive_missing_messages():
+	var opts := _make_interactive_opts()
+	opts.messages = []
+	assert_eq(opts.validate(), "at least one message is required")
+
+
+func test_interactive_too_many_messages():
+	var opts := _make_interactive_opts()
+	opts.messages = []
+	for i in JestInteractiveNotificationOptions.MAX_MESSAGES + 1:
+		opts.messages.append({"key": "m%d" % i, "body": "body", "ctaText": "Play"})
+	assert_eq(opts.validate(), "messages must have at most %d entries" % JestInteractiveNotificationOptions.MAX_MESSAGES)
+
+
+func test_interactive_message_empty_key():
+	var opts := _make_interactive_opts()
+	opts.messages[0]["key"] = ""
+	assert_eq(opts.validate(), "message 0 key: key cannot be empty")
+
+
+func test_interactive_message_invalid_key_chars():
+	var opts := _make_interactive_opts()
+	opts.messages[0]["key"] = "invalid key!"
+	assert_eq(opts.validate(), "message 0 key: keys may only contain letters, digits, - and _")
+
+
+func test_interactive_message_empty_body():
+	var opts := _make_interactive_opts()
+	opts.messages[0]["body"] = ""
+	assert_eq(opts.validate(), "message 0 body cannot be empty")
+
+
+func test_interactive_step_no_options():
+	var opts := _make_interactive_opts()
+	opts.messages[0]["options"] = []
+	assert_eq(opts.validate(), "message 0 needs at least one option")
+
+
+func test_interactive_step_too_many_options():
+	var opts := _make_interactive_opts()
+	var many_opts := []
+	for i in JestInteractiveNotificationOptions.MAX_OPTIONS_PER_MESSAGE + 1:
+		many_opts.append({"key": "o%d" % i, "label": "Label"})
+	opts.messages[0]["options"] = many_opts
+	assert_eq(opts.validate(), "message 0 options must have at most %d entries" % JestInteractiveNotificationOptions.MAX_OPTIONS_PER_MESSAGE)
+
+
+func test_interactive_option_empty_label():
+	var opts := _make_interactive_opts()
+	opts.messages[0]["options"][0]["label"] = ""
+	assert_eq(opts.validate(), "message 0 option 0 label cannot be empty")
+
+
+func test_interactive_terminal_empty_cta():
+	var opts := _make_interactive_opts()
+	opts.messages[1]["ctaText"] = ""
+	assert_eq(opts.validate(), "message 1 ctaText cannot be empty")
+
+
+func test_interactive_message_missing_type():
+	var opts := _make_interactive_opts()
+	opts.messages[0] = {"key": "q1", "body": "What now?"}
+	assert_eq(opts.validate(), "message 0 must have either options (step) or ctaText (terminal)")
+
+
+func test_interactive_no_schedule():
+	var opts := _make_interactive_opts()
+	opts.scheduled_in_days = 0
+	assert_eq(opts.validate(), "Either date or scheduled_in_days must be provided")
+
+
+func test_interactive_both_date_and_days():
+	var opts := _make_interactive_opts()
+	opts.date = "2025-01-01T00:00:00Z"
+	assert_eq(opts.validate(), "date and scheduled_in_days are mutually exclusive")
