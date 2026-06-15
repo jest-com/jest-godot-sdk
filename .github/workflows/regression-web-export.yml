@@ -19,7 +19,6 @@ env:
   EXPORT_PRESET: JestSDKRegression
   REGRESSION_BUILD_DIR: build/regression-web
   REGRESSION_ZIP: jest-godot-sdk-regression-web.zip
-  REGRESSION_ZIP_INNER_DIR: jest-godot-sdk-regression-web
 
 jobs:
   build:
@@ -74,9 +73,11 @@ jobs:
       - name: Package regression fixture
         run: |
           set -euxo pipefail
-          mkdir -p "staging/${REGRESSION_ZIP_INNER_DIR}"
-          cp -r "${REGRESSION_BUILD_DIR}/." "staging/${REGRESSION_ZIP_INNER_DIR}/"
-          (cd staging && zip -r "../${REGRESSION_ZIP}" "${REGRESSION_ZIP_INNER_DIR}")
+          # Zip the build contents flat so index.html sits at the zip root.
+          # The platform's upload requires a root index.html and rejects builds
+          # wrapped in a top-level folder.
+          (cd "${REGRESSION_BUILD_DIR}" && zip -r "${GITHUB_WORKSPACE}/${REGRESSION_ZIP}" .)
+          unzip -l "${REGRESSION_ZIP}"
 
       - name: Upload as workflow artifact
         if: github.event_name == 'workflow_dispatch'
