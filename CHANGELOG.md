@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.1] - 2026-06-15
+
+### Fixed
+- Regression web export is now packaged with `index.html` at the archive root,
+  so it uploads cleanly to the platform (release tooling only; no SDK changes).
+
 ## [1.9.0] - 2026-06-05
 
 ### Changed
