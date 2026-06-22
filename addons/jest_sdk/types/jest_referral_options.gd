@@ -16,7 +16,8 @@ extends Resource
 ## Dictionaries with "body", "ctaText", and optional "title" and "imageReference").
 @export var notification_templates: Array = []
 ## Optional base64 data URL image (e.g. from canvas.toDataURL) to use as the OG image on the
-## referral landing page. Accepted MIME: image/png, image/jpeg, image/webp. At most 2 MB.
+## referral landing page. Accepted MIME: image/png, image/jpeg, image/webp, image/gif. At most 2 MB.
+## Animated GIFs are hosted unmodified, so they stay animated in link previews.
 @export var share_image: String = ""
 
 
