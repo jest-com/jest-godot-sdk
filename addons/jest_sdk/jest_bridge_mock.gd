@@ -27,6 +27,9 @@ var _player_values: Dictionary = {}
 var _notifications: Array[Dictionary] = []
 var _entry_payload: String = "{}"
 
+## Last screenshot provider registered via set_screenshot_provider, for test inspection.
+var screenshot_provider: Callable
+
 
 func _log(message: String) -> void:
 	if verbose:
@@ -152,3 +155,8 @@ func capture_event(event_name: String, properties_json: String) -> void:
 
 func mark_game_loaded() -> void:
 	_log("mark_game_loaded")
+
+
+func set_screenshot_provider(provider: Callable) -> void:
+	_log("set_screenshot_provider(%s)" % ("valid" if provider.is_valid() else "null"))
+	screenshot_provider = provider

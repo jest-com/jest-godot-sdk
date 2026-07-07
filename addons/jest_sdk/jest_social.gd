@@ -2,11 +2,13 @@ class_name JestSocial
 extends RefCounted
 
 var _player: JestPlayer
+var _bridge: JestBridge
 static var _warned_get_player_avatar: bool = false
 
 
-func _init(player: JestPlayer) -> void:
+func _init(player: JestPlayer, bridge: JestBridge = null) -> void:
 	_player = player
+	_bridge = bridge
 
 
 ## Returns the current player's profile (username and sized avatar URL).
@@ -35,3 +37,16 @@ func get_player_avatar(size: int = 1000) -> String:
 		_warned_get_player_avatar = true
 		push_warning("JestSocial.get_player_avatar is deprecated; use get_profile(size).avatar_url instead.")
 	return JestUtils.get_player_avatar(_player.avatar_url, size)
+
+
+## Registers [param provider] as the screenshot source used when the platform
+## asks the game for a screenshot, replacing the SDK's automatic canvas capture.
+## [param provider] takes no arguments and must return a base64-encoded PNG
+## String (raw or data URL), e.g. [code]JestUtils.texture_to_data_url(get_viewport().get_texture())[/code],
+## or an empty string when no screenshot is available right now (e.g. mid-load).
+## Pass an invalid Callable (e.g. [code]Callable()[/code]) to unregister and
+## restore automatic capture.
+## Mirrors the HTML5 SDK's [code]social.setScreenshotProvider(...)[/code].
+func set_screenshot_provider(provider: Callable) -> void:
+	if _bridge != null:
+		_bridge.set_screenshot_provider(provider)

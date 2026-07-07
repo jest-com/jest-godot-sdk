@@ -10,7 +10,7 @@ var social: JestSocial
 func before_each():
 	bridge = JestBridge.new()
 	player = JestPlayer.new(bridge)
-	social = JestSocial.new(player)
+	social = JestSocial.new(player, bridge)
 
 
 func test_get_profile_returns_username_and_sized_avatar():
@@ -47,3 +47,16 @@ func test_get_player_avatar_wraps_raw_avatar_url():
 		social.get_player_avatar(256),
 		"https://cdn.jestpub.com/cdn-cgi/image/format=webp%2Cfit=cover%2Cwidth=256%2C/https%3A%2F%2Fcdn.jest.com%2Favatars%2Fabc.webp",
 	)
+
+
+func test_set_screenshot_provider_delegates_to_bridge():
+	var provider := func(): return "abc123"
+	social.set_screenshot_provider(provider)
+	assert_true(bridge._mock.screenshot_provider.is_valid())
+	assert_eq(bridge._mock.screenshot_provider.call(), "abc123")
+
+
+func test_set_screenshot_provider_can_unregister():
+	social.set_screenshot_provider(func(): return "abc123")
+	social.set_screenshot_provider(Callable())
+	assert_false(bridge._mock.screenshot_provider.is_valid())
