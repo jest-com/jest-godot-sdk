@@ -143,3 +143,12 @@ func test_schedule_notification():
 
 func test_mark_game_loaded_does_not_crash():
 	mock.mark_game_loaded()
+
+
+# --- set_screenshot_provider ---
+
+func test_set_screenshot_provider_stores_callable():
+	var provider := func(): return "abc123"
+	mock.set_screenshot_provider(provider)
+	assert_true(mock.screenshot_provider.is_valid())
+	assert_eq(mock.screenshot_provider.call(), "abc123")

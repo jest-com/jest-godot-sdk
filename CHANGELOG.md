@@ -1,30 +1,47 @@
 # Changelog
 
+## [1.10.0] - 2026-07-07
+
+### Added
+
+- `JestSDK.social.set_screenshot_provider(provider)` — registers a Callable used
+  as the screenshot source when the platform asks the game for a screenshot,
+  replacing the SDK's automatic canvas capture. `provider` takes no arguments
+  and returns a base64 PNG String (raw or data URL), e.g.
+  `JestUtils.texture_to_data_url(get_viewport().get_texture())`, or an empty
+  string when no screenshot is available. Pass an invalid Callable (e.g.
+  `Callable()`) to unregister and restore automatic capture.
+
 ## [1.9.1] - 2026-06-15
 
 ### Fixed
+
 - Regression web export is now packaged with `index.html` at the archive root,
   so it uploads cleanly to the platform (release tooling only; no SDK changes).
 
 ## [1.9.0] - 2026-06-05
 
 ### Changed
+
 - `JestSDK.login()` is now a coroutine that resumes when the player dismisses the
   login popup, or immediately when the player is already registered. `await` it to
   run code after the flow completes; fire-and-forget callers are unaffected.
 
 ### Added
+
 - `JestUtils.texture_to_data_url(texture)` / `JestUtils.image_to_data_url(image)` —
   encode a texture or image to a PNG base64 data URL (for image fields such as the
   referral `share_image`). Compressed images are decompressed first.
 
 ### Deprecated
+
 - `JestSubscription.estimated_revenue` — always `0`. Kept for backwards
   compatibility and will be removed in a future release.
 
 ## [1.5.1] - 2026-05-15
 
 ### Added
+
 - `JestSDK.social` — groups profile and avatar helpers to match the HTML5 SDK's
   social module. Includes:
   - `JestSDK.social.get_profile(avatar_size = 1000)` — returns a Dictionary with
@@ -33,15 +50,16 @@
     player's resized avatar URL.
   - `JestSDK.social.get_bot_avatar(username, size = 1000)` — returns a
     deterministic bot avatar URL.
-  Sizes accept 64, 128, 256, 512, or 1000; intermediate values bucket down to
-  the next supported size. Localhost player avatar URLs pass through unwrapped
-  because Cloudflare can't fetch them in dev.
+    Sizes accept 64, 128, 256, 512, or 1000; intermediate values bucket down to
+    the next supported size. Localhost player avatar URLs pass through unwrapped
+    because Cloudflare can't fetch them in dev.
 - Root `JestSDK.get_player_avatar(...)` and `JestSDK.get_bot_avatar(...)` remain
   compatibility aliases for the social module.
 
 ## [1.5.0] - 2026-05-13
 
 ### Added
+
 - `JestSDK.get_player_avatar(size = 1000)` — returns a CDN URL for the current
   player's avatar, routed through Cloudflare Image Resizing so Godot receives a
   decodable image format instead of the raw bucket file. Returns an empty string
@@ -51,6 +69,7 @@
   HTML5 SDK's `social.getProfile({ avatarSize })`.
 
 ### Changed
+
 - Sized avatar URLs now request `format=webp` from Cloudflare instead of
   `format=auto`, avoiding browser-dependent AVIF responses in Godot.
 - Web exports pass the Godot SDK version through `JestSDK.init` instead of
@@ -59,6 +78,7 @@
 ## [1.4.1] - 2026-05-12
 
 ### Changed
+
 - `JestSDK.get_bot_avatar()` URL path changed from
   `cdn.jest.com/avatar/bot/<N>.webp` to `cdn.jest.com/avatars/bot/<N>.webp`,
   aligning with player avatars (`cdn.jest.com/avatars/<uuid>.webp`) so both
@@ -69,6 +89,7 @@
 ## [1.4.0] - 2026-05-07
 
 ### Added
+
 - `JestPurchase.price` (float) and `JestPurchase.currency` (String, ISO 4217) —
   populated from the platform's purchase response so games can display the
   amount paid in the original currency.
@@ -83,6 +104,7 @@
   `CTA_CHAR_LIMIT` (50) — exposed as public constants on the resource.
 
 ### Changed
+
 - `JestNotificationOptions.validate()` now also enforces:
   - `body` must be at most 2000 characters.
   - `title` must be at most 200 characters when set.
@@ -94,11 +116,13 @@
 ## [1.3.0] - 2026-04-29
 
 ### Added
+
 - `JestSDK.show_registration_overlay(options)` convenience wrapper.
 
 ## [1.2.0] - 2026-04-24
 
 ### Added
+
 - `JestPlayer.username` and `JestPlayer.avatar_url` — mirror the new fields
   returned by the platform's `getPlayer()` response. `JestSignedPlayer` now
   carries the same two fields.
@@ -114,6 +138,7 @@
 - New resource `JestRegistrationOverlayOptions` for configuring the overlay.
 
 ### Deprecated
+
 - `JestNotificationOptions.image_reference` — use `asset_reference` instead.
 
 ## [1.1.1]
