@@ -143,3 +143,9 @@ func test_schedule_notification():
 
 func test_mark_game_loaded_does_not_crash():
 	mock.mark_game_loaded()
+
+
+# --- mark_first_milestone ---
+
+func test_mark_first_milestone_does_not_crash():
+	mock.mark_first_milestone()

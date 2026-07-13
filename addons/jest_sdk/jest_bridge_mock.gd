@@ -152,3 +152,7 @@ func capture_event(event_name: String, properties_json: String) -> void:
 
 func mark_game_loaded() -> void:
 	_log("mark_game_loaded")
+
+
+func mark_first_milestone() -> void:
+	_log("mark_first_milestone")

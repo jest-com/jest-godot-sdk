@@ -183,6 +183,15 @@ func mark_game_loaded() -> void:
 	_bridge.mark_game_loaded()
 
 
+## Reports that the player reached your game's first meaningful milestone — the
+## earliest action that demonstrates the player has experienced the core value
+## of your game (e.g. completing the tutorial or Level 1). Call it every time
+## the milestone is reached; calls after the first in a session are no-ops.
+## Implementing this event is required for launch.
+func mark_first_milestone() -> void:
+	_bridge.mark_first_milestone()
+
+
 ## Returns the current player's profile (username and sized avatar URL).
 ## Mirrors the HTML5 SDK's [code]social.getProfile({ avatarSize })[/code].
 ## Supported sizes: 64, 128, 256, 512, 1000 (default). Other values are

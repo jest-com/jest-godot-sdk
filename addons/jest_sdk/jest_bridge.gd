@@ -27,6 +27,7 @@ var _overlay_handles: Dictionary = {}
 
 var _loading_complete: bool = false
 var _game_loaded_sent: bool = false
+var _first_milestone_sent: bool = false
 
 # Cached references to JS objects
 var _sdk: JavaScriptObject         # window.JestSDK
@@ -329,6 +330,16 @@ func mark_game_loaded() -> void:
 		_mock.mark_game_loaded()
 		return
 	_sdk.markGameLoaded()
+
+
+func mark_first_milestone() -> void:
+	if _first_milestone_sent:
+		return
+	_first_milestone_sent = true
+	if not _is_web:
+		_mock.mark_first_milestone()
+		return
+	_sdk.markFirstMilestone()
 
 
 func capture_event(event_name: String, properties_json: String) -> void:
