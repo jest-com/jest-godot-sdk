@@ -350,6 +350,7 @@ func _run_guardrails() -> Array[Dictionary]:
 	var bad_referral := JestReferralOptions.new()
 	var bad_share := await JestSDK.referrals.open_referral_dialog(bad_referral)
 	var bad_notification := JestNotificationOptions.new()
+	var bad_team_redirect := await JestSDK.navigation.redirect_to_team_game("")
 	JestSDK.player.set_value("", "nope")
 	JestSDK.player.delete_value("")
 	JestSDK.player.has_value("")
@@ -370,6 +371,7 @@ func _run_guardrails() -> Array[Dictionary]:
 		_assert_eq("empty cancel subscription sku rejected", bad_cancel.error, "invalid_sku"),
 		_assert_eq("empty referral rejected", bad_share.error, "reference cannot be empty"),
 		_assert_eq("empty notification rejected", bad_notification.validate(), "body is required"),
+		_assert_eq("empty team game slug rejected", bad_team_redirect.error, "game_slug cannot be empty"),
 	]
 
 

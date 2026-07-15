@@ -125,6 +125,13 @@ func test_signed_player_unregistered():
 	assert_false(r["player"]["registered"])
 
 
+# --- Redirect to team game ---
+
+func test_redirect_to_team_game_response():
+	var r := JSON.parse_string(mock.get_redirect_to_team_game_response('{"gameSlug":"other-game"}'))
+	assert_eq(r["result"], "success")
+
+
 # --- Verbose mode ---
 
 func test_verbose_defaults_off():

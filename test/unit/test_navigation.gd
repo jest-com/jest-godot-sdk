@@ -45,3 +45,25 @@ func test_redirect_to_flagship_with_payload():
 func test_redirect_to_explore():
 	nav.redirect_to_explore_page()
 	assert_true(true, "should not error")
+
+
+func test_redirect_to_team_game():
+	var result = await nav.redirect_to_team_game("other-game")
+	assert_true(result is JestResult)
+	assert_true(result.ok)
+
+
+func test_redirect_to_team_game_with_payload():
+	var result = await nav.redirect_to_team_game("other-game", {"from": "cross_promo"})
+	assert_true(result.ok)
+
+
+func test_redirect_to_team_game_skip_confirm():
+	var result = await nav.redirect_to_team_game("other-game", {}, true)
+	assert_true(result.ok)
+
+
+func test_redirect_to_team_game_empty_slug():
+	var result = await nav.redirect_to_team_game("")
+	assert_false(result.ok)
+	assert_eq(result.error, "game_slug cannot be empty")
