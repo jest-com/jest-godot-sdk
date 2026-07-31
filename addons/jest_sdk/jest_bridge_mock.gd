@@ -96,7 +96,7 @@ func get_subscription_response() -> String:
 
 func get_subscriptions_response() -> String:
 	_log("get_subscriptions")
-	return '{"subscriptions":[{"sku":"premium","displayName":"Premium Subscription","displayDescription":"Unlock premium features and exclusive content.","status":"inactive","price":9.99,"currency":"USD","billingPeriod":"monthly","estimatedRevenue":0}],"signed":""}'
+	return '{"subscriptions":[{"sku":"premium","displayName":"Premium Subscription","displayDescription":"Unlock premium features and exclusive content.","status":"inactive","price":9.99,"currency":"USD","billingPeriod":"monthly","introOffer":null,"estimatedRevenue":0},{"sku":"intro","displayName":"Intro Subscription","displayDescription":"Half price for the first three months.","status":"inactive","price":9.99,"currency":"USD","billingPeriod":"monthly","introOffer":{"price":4.99,"durationPeriods":3},"estimatedRevenue":0}],"signed":""}'
 
 
 func get_cancel_subscription_response() -> String:
