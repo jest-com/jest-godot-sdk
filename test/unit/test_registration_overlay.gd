@@ -22,7 +22,31 @@ func test_options_defaults_match_html5_api():
 	var opts := JestRegistrationOverlayOptions.new()
 	assert_eq(opts.theme, "dark")
 	assert_true(opts.entry_payload.is_empty())
+	assert_eq(opts.message, "")
 	assert_false(opts.on_close.is_valid())
+
+
+func test_overlay_show_with_invalid_message_errors():
+	# Should push_error and still return a handle without crashing
+	var bridge := JestBridge.new()
+	var overlay := JestRegistrationOverlay.new(bridge)
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "Join the game!"
+
+	var handle := overlay.show(opts)
+
+	assert_not_null(handle)
+
+
+func test_overlay_show_with_valid_message_returns_handle():
+	var bridge := JestBridge.new()
+	var overlay := JestRegistrationOverlay.new(bridge)
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "Let me in! {{registrationCode}} is my code."
+
+	var handle := overlay.show(opts)
+
+	assert_not_null(handle)
 
 
 func test_overlay_show_returns_handle():

@@ -165,6 +165,55 @@ func test_referral_share_image_defaults_empty():
 	assert_eq(opts.share_image, "")
 
 
+# --- JestRegistrationOverlayOptions ---
+
+func test_registration_overlay_no_message_is_valid():
+	var opts := JestRegistrationOverlayOptions.new()
+	assert_eq(opts.validate(), "")
+
+
+func test_registration_overlay_valid_message():
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "Let me in! {{registrationCode}} is my code."
+	assert_eq(opts.validate(), "")
+
+
+func test_registration_overlay_message_missing_placeholder():
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "Join the game!"
+	assert_eq(opts.validate(), "message must contain {{registrationCode}}")
+
+
+func test_registration_overlay_message_blank():
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "   "
+	assert_eq(opts.validate(), "message must not be empty")
+
+
+func test_registration_overlay_message_duplicate_placeholder():
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "{{registrationCode}} and {{registrationCode}}"
+	assert_eq(opts.validate(), "message must contain {{registrationCode}} once and no other placeholder")
+
+
+func test_registration_overlay_message_no_space_before_placeholder():
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "Yourcode{{registrationCode}} is yours"
+	assert_eq(opts.validate(), "message must leave a space around {{registrationCode}}")
+
+
+func test_registration_overlay_message_no_space_after_placeholder():
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "Your code is {{registrationCode}}now"
+	assert_eq(opts.validate(), "message must leave a space around {{registrationCode}}")
+
+
+func test_registration_overlay_message_too_long():
+	var opts := JestRegistrationOverlayOptions.new()
+	opts.message = "x".repeat(135) + " {{registrationCode}}"
+	assert_eq(opts.validate(), "message must be at most 140 characters once the code is filled in")
+
+
 # --- JestLoginMessageOptions ---
 
 func test_login_message_valid():
