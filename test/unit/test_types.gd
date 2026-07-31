@@ -148,6 +148,19 @@ func test_subscription_from_dict_missing_estimated_revenue():
 	assert_eq(s.estimated_revenue, 0.0)
 
 
+func test_subscription_from_dict_no_intro_offer():
+	var s := JestSubscription.from_dict({"sku": "basic", "introOffer": null})
+	assert_null(s.intro_offer)
+
+
+func test_subscription_from_dict_with_intro_offer():
+	var d := {"sku": "intro", "introOffer": {"price": 4.99, "durationPeriods": 3}}
+	var s := JestSubscription.from_dict(d)
+	assert_not_null(s.intro_offer)
+	assert_eq(s.intro_offer.price, 4.99)
+	assert_eq(s.intro_offer.duration_periods, 3)
+
+
 # --- JestSubscriptionResult ---
 
 func test_subscription_result_success():

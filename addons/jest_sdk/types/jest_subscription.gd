@@ -15,6 +15,9 @@ var price: float = 0.0
 var currency: String = ""
 ## Billing period: "monthly", "yearly", or "weekly".
 var billing_period: String = ""
+## Introductory offer for this wallet, if any. Null unless an intro offer is
+## configured and the wallet has never subscribed to this product before.
+var intro_offer: JestSubscriptionIntroOffer = null
 ## @deprecated Always 0. Kept for SDK backwards compatibility.
 var estimated_revenue: float = 0.0
 
@@ -29,5 +32,7 @@ static func from_dict(d: Dictionary) -> JestSubscription:
 	s.price = float(d.get("price", 0.0))
 	s.currency = str(d.get("currency", ""))
 	s.billing_period = str(d.get("billingPeriod", ""))
+	if d.get("introOffer", null) is Dictionary:
+		s.intro_offer = JestSubscriptionIntroOffer.from_dict(d["introOffer"])
 	s.estimated_revenue = float(d.get("estimatedRevenue", 0.0))
 	return s
