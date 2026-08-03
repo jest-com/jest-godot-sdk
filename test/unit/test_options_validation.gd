@@ -176,3 +176,15 @@ func test_login_message_valid():
 func test_login_message_missing():
 	var opts := JestLoginMessageOptions.new()
 	assert_eq(opts.validate(), "message is required")
+
+
+func test_login_message_target_game_slug_defaults_empty():
+	var opts := JestLoginMessageOptions.new()
+	assert_eq(opts.target_game_slug, "")
+
+
+func test_login_message_valid_with_target_game_slug():
+	var opts := JestLoginMessageOptions.new()
+	opts.message = "Join the game"
+	opts.target_game_slug = "other-game"
+	assert_eq(opts.validate(), "")

@@ -336,3 +336,9 @@ func test_login_reservation_error():
 	var r := JestLoginReservation.from_dict({"error": "could_not_acquire_lease"})
 	assert_false(r.ok)
 	assert_eq(r.error, "could_not_acquire_lease")
+
+
+func test_login_reservation_invalid_target_game_error():
+	var r := JestLoginReservation.from_dict({"error": "invalid_target_game"})
+	assert_false(r.ok)
+	assert_eq(r.error, "invalid_target_game")
