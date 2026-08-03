@@ -28,9 +28,10 @@ project update.
 - `guardrails`: validation paths that should not call the host.
 
 Positive navigation, login, registration overlay, purchase checkout,
-subscription checkout, and subscription cancellation flows are not launched here
-because they can navigate away from the test iframe or require user interaction.
-Their validation paths are covered by guardrail scenarios and existing unit tests.
+subscription checkout, subscription cancellation, and retention offer claim flows
+are not launched here because they can navigate away from the test iframe, require
+user interaction, or mutate one-time entitlement state. Their validation paths are
+covered by guardrail scenarios and existing unit tests.
 
 ## Building
 

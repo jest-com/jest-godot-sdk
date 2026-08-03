@@ -104,6 +104,20 @@ func test_complete_purchase():
 	assert_eq(r["result"], "success")
 
 
+func test_claim_retention_offer_success():
+	mock.mock_claim_retention_offer_succeeds = true
+	var r := JSON.parse_string(mock.get_claim_retention_offer_response())
+	assert_eq(r["result"], "success")
+	assert_true(r.has("subscription"))
+
+
+func test_claim_retention_offer_not_eligible():
+	mock.mock_claim_retention_offer_succeeds = false
+	var r := JSON.parse_string(mock.get_claim_retention_offer_response())
+	assert_eq(r["result"], "error")
+	assert_eq(r["error"], "not_eligible")
+
+
 func test_incomplete_purchases():
 	var r := JSON.parse_string(mock.get_incomplete_purchase_response())
 	assert_false(r["hasMore"])
