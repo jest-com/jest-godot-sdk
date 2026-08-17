@@ -12,6 +12,7 @@ const SCENARIOS: Array[String] = [
 	"commerce-errors",
 	"notifications",
 	"social",
+	"lifecycle",
 	"referrals-read",
 	"referrals-share",
 	"internal",
@@ -115,6 +116,8 @@ func _run_command(command: Dictionary) -> void:
 			assertions = await _run_notifications(run_id)
 		"social":
 			assertions = await _run_social()
+		"lifecycle":
+			assertions = await _run_lifecycle()
 		"referrals-read":
 			assertions = await _run_referrals_read()
 		"referrals-share":
@@ -282,6 +285,24 @@ func _run_social() -> Array[Dictionary]:
 		_assert_true("profile username is string", profile.username is String),
 		_assert_true("profile avatar is string", profile.avatar_url is String),
 		_assert_true("legacy player avatar is string", legacy_avatar is String),
+	]
+
+
+func _run_lifecycle() -> Array[Dictionary]:
+	var on_hidden := func(): pass
+	var on_shown := func(): pass
+	var on_exit_requested := func(): pass
+	JestSDK.lifecycle.hidden.connect(on_hidden)
+	JestSDK.lifecycle.shown.connect(on_shown)
+	JestSDK.lifecycle.exit_requested.connect(on_exit_requested)
+	JestSDK.lifecycle.hidden.disconnect(on_hidden)
+	JestSDK.lifecycle.shown.disconnect(on_shown)
+	JestSDK.lifecycle.exit_requested.disconnect(on_exit_requested)
+	return [
+		_assert_true("lifecycle module present", JestSDK.lifecycle is JestLifecycle),
+		_assert_true("hidden signal connect/disconnect", not JestSDK.lifecycle.hidden.is_connected(on_hidden)),
+		_assert_true("shown signal connect/disconnect", not JestSDK.lifecycle.shown.is_connected(on_shown)),
+		_assert_true("exit_requested signal connect/disconnect", not JestSDK.lifecycle.exit_requested.is_connected(on_exit_requested)),
 	]
 
 

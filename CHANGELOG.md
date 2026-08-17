@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.11.0] - 2026-08-17
+
+### Added
+
+- `JestSDK.lifecycle` — app visibility and platform exit events:
+  - `hidden` — emitted when the game document changes from visible to hidden.
+  - `shown` — emitted when the game document changes from hidden to visible.
+  - `exit_requested` — emitted when the platform begins an exit flow for the
+    game.
+
 ## [1.10.0] - 2026-07-21
 
 ### Added
