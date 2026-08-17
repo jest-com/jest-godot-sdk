@@ -133,12 +133,14 @@ func test_subscription_from_dict():
 		"price": 9.99,
 		"currency": "USD",
 		"billingPeriod": "monthly",
+		"trialEligible": true,
 		"estimatedRevenue": 0
 	}
 	var s := JestSubscription.from_dict(d)
 	assert_eq(s.sku, "premium")
 	assert_eq(s.status, "active")
 	assert_eq(s.billing_period, "monthly")
+	assert_eq(s.trial_eligible, true)
 	# estimated_revenue is deprecated and always 0.
 	assert_eq(s.estimated_revenue, 0.0)
 
@@ -146,6 +148,11 @@ func test_subscription_from_dict():
 func test_subscription_from_dict_missing_estimated_revenue():
 	var s := JestSubscription.from_dict({"sku": "basic"})
 	assert_eq(s.estimated_revenue, 0.0)
+
+
+func test_subscription_from_dict_missing_trial_eligible():
+	var s := JestSubscription.from_dict({"sku": "basic"})
+	assert_eq(s.trial_eligible, false)
 
 
 # --- JestSubscriptionResult ---
