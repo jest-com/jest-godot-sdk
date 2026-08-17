@@ -20,6 +20,8 @@ var mock_purchase_succeeds: bool = true
 var mock_subscription_succeeds: bool = true
 ## Configure mock cancel subscription behavior.
 var mock_cancel_subscription_succeeds: bool = true
+## Configure mock claim retention offer behavior.
+var mock_claim_retention_offer_succeeds: bool = true
 ## Configure mock products JSON.
 var mock_products_json: String = '[{"sku":"gems_100","name":"100 Gems","description":"Get 100 gems","price":99.0,"currency":"USD"},{"sku":"gems_500","name":"500 Gems","description":"Get 500 gems","price":499.0,"currency":"USD"}]'
 
@@ -105,6 +107,14 @@ func get_cancel_subscription_response() -> String:
 		return '{"result":"success"}'
 	else:
 		return '{"result":"cancel"}'
+
+
+func get_claim_retention_offer_response() -> String:
+	_log("claim_retention_offer")
+	if mock_claim_retention_offer_succeeds:
+		return '{"result":"success","subscription":{"sku":"premium_monthly","displayName":"Premium Monthly","displayDescription":"Monthly premium subscription","status":"active","price":9.99,"currency":"USD","billingPeriod":"monthly","retentionOffer":null,"estimatedRevenue":0},"subscriptionSigned":"mock_jws"}'
+	else:
+		return '{"result":"error","error":"not_eligible"}'
 
 
 func get_incomplete_purchase_response() -> String:

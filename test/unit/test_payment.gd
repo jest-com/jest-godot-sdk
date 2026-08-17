@@ -104,3 +104,27 @@ func test_cancel_subscription_empty_sku():
 	var result = await payment.cancel_subscription("")
 	assert_false(result.ok)
 	assert_eq(result.error, "invalid_sku")
+
+
+func test_claim_retention_offer_success():
+	bridge._mock.mock_claim_retention_offer_succeeds = true
+	var result = await payment.claim_retention_offer("premium_monthly")
+	assert_true(result is JestSubscriptionResult)
+	assert_true(result.ok)
+	assert_eq(result.status, JestSubscriptionResult.Status.SUCCESS)
+	assert_not_null(result.subscription)
+	assert_eq(result.subscription.sku, "premium_monthly")
+
+
+func test_claim_retention_offer_not_eligible():
+	bridge._mock.mock_claim_retention_offer_succeeds = false
+	var result = await payment.claim_retention_offer("premium_monthly")
+	assert_false(result.ok)
+	assert_eq(result.status, JestSubscriptionResult.Status.ERROR)
+	assert_eq(result.error, "not_eligible")
+
+
+func test_claim_retention_offer_empty_sku():
+	var result = await payment.claim_retention_offer("")
+	assert_false(result.ok)
+	assert_eq(result.error, "invalid_sku")

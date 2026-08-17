@@ -150,6 +150,22 @@ func test_subscription_from_dict_missing_estimated_revenue():
 	assert_eq(s.estimated_revenue, 0.0)
 
 
+func test_subscription_retention_offer_present():
+	var s := JestSubscription.from_dict({"sku": "premium", "retentionOffer": {"price": 4.99, "durationPeriods": 3}})
+	assert_eq(s.retention_offer.get("price"), 4.99)
+	assert_eq(s.retention_offer.get("durationPeriods"), 3)
+
+
+func test_subscription_retention_offer_null():
+	var s := JestSubscription.from_dict({"sku": "premium", "retentionOffer": null})
+	assert_eq(s.retention_offer, {})
+
+
+func test_subscription_retention_offer_missing():
+	var s := JestSubscription.from_dict({"sku": "basic"})
+	assert_eq(s.retention_offer, {})
+
+
 func test_subscription_from_dict_missing_trial_eligible():
 	var s := JestSubscription.from_dict({"sku": "basic"})
 	assert_eq(s.trial_eligible, false)
@@ -179,7 +195,7 @@ func test_subscription_result_cancel():
 
 func test_subscription_result_error_passthrough():
 	# Domain error codes forwarded by the checkout bridge must reach the game verbatim.
-	for code in ["internal_error", "invalid_subscription", "already_subscribed", "guest_not_allowed"]:
+	for code in ["internal_error", "invalid_subscription", "already_subscribed", "guest_not_allowed", "not_eligible"]:
 		var r := JestSubscriptionResult.from_dict({"result": "error", "error": code})
 		assert_false(r.ok)
 		assert_eq(r.status, JestSubscriptionResult.Status.ERROR)

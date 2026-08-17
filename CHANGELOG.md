@@ -4,6 +4,13 @@
 
 ### Added
 
+- `JestSDK.payment.claim_retention_offer(sku)` — applies a subscription's configured
+  retention discount to the player's existing subscription instantly, no checkout.
+  Returns a `JestSubscriptionResult` with the refreshed subscription, or an error
+  (`"not_eligible"` when already claimed, ineligible, or an intro offer is still
+  running).
+- `JestSubscription.retention_offer` — the retention discount the wallet can claim
+  once via `claim_retention_offer`. Empty `Dictionary` when none available.
 - `JestSubscription.trial_eligible` — `true` only when the offer has a free
   trial and the wallet has never subscribed to it, so you can show a
   "Start free trial" call to action only when it applies.

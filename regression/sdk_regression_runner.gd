@@ -242,11 +242,13 @@ func _run_commerce_errors() -> Array[Dictionary]:
 	var complete := await JestSDK.payment.complete_purchase("")
 	var subscription := await JestSDK.payment.begin_subscription("")
 	var cancel := await JestSDK.payment.cancel_subscription("")
+	var claim_retention := await JestSDK.payment.claim_retention_offer("")
 	return [
 		_assert_eq("begin_purchase empty sku rejected", purchase.error, "invalid_sku"),
 		_assert_eq("complete_purchase empty token rejected", complete.error, "invalid_token"),
 		_assert_eq("begin_subscription empty sku rejected", subscription.error, "invalid_sku"),
 		_assert_eq("cancel_subscription empty sku rejected", cancel.error, "invalid_sku"),
+		_assert_eq("claim_retention_offer empty sku rejected", claim_retention.error, "invalid_sku"),
 	]
 
 
@@ -347,6 +349,7 @@ func _run_guardrails() -> Array[Dictionary]:
 	var bad_complete := await JestSDK.payment.complete_purchase("")
 	var bad_subscription := await JestSDK.payment.begin_subscription("")
 	var bad_cancel := await JestSDK.payment.cancel_subscription("")
+	var bad_claim_retention := await JestSDK.payment.claim_retention_offer("")
 	var bad_referral := JestReferralOptions.new()
 	var bad_share := await JestSDK.referrals.open_referral_dialog(bad_referral)
 	var bad_notification := JestNotificationOptions.new()
@@ -368,6 +371,7 @@ func _run_guardrails() -> Array[Dictionary]:
 		_assert_eq("empty purchase token rejected", bad_complete.error, "invalid_token"),
 		_assert_eq("empty subscription sku rejected", bad_subscription.error, "invalid_sku"),
 		_assert_eq("empty cancel subscription sku rejected", bad_cancel.error, "invalid_sku"),
+		_assert_eq("empty claim retention offer sku rejected", bad_claim_retention.error, "invalid_sku"),
 		_assert_eq("empty referral rejected", bad_share.error, "reference cannot be empty"),
 		_assert_eq("empty notification rejected", bad_notification.validate(), "body is required"),
 	]
