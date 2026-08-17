@@ -91,14 +91,14 @@ func get_purchase_response() -> String:
 func get_subscription_response() -> String:
 	_log("begin_subscription")
 	if mock_subscription_succeeds:
-		return '{"result":"success","subscription":{"sku":"premium_monthly","displayName":"Premium Monthly","displayDescription":"Monthly premium subscription","status":"active","price":9.99,"currency":"USD","billingPeriod":"monthly","estimatedRevenue":0},"subscriptionSigned":"mock_jws"}'
+		return '{"result":"success","subscription":{"sku":"premium_monthly","displayName":"Premium Monthly","displayDescription":"Monthly premium subscription","status":"active","price":9.99,"currency":"USD","billingPeriod":"monthly","trialEligible":false,"estimatedRevenue":0},"subscriptionSigned":"mock_jws"}'
 	else:
 		return '{"result":"cancel"}'
 
 
 func get_subscriptions_response() -> String:
 	_log("get_subscriptions")
-	return '{"subscriptions":[{"sku":"premium","displayName":"Premium Subscription","displayDescription":"Unlock premium features and exclusive content.","status":"inactive","price":9.99,"currency":"USD","billingPeriod":"monthly","estimatedRevenue":0}],"signed":""}'
+	return '{"subscriptions":[{"sku":"premium","displayName":"Premium Subscription","displayDescription":"Unlock premium features and exclusive content.","status":"inactive","price":9.99,"currency":"USD","billingPeriod":"monthly","trialEligible":true,"estimatedRevenue":0}],"signed":""}'
 
 
 func get_cancel_subscription_response() -> String:

@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.10.0] - 2026-08-03
+## [1.10.0] - 2026-07-21
 
 ### Added
 
@@ -11,6 +11,9 @@
   running).
 - `JestSubscription.retention_offer` — the retention discount the wallet can claim
   once via `claim_retention_offer`. Empty `Dictionary` when none available.
+- `JestSubscription.trial_eligible` — `true` only when the offer has a free
+  trial and the wallet has never subscribed to it, so you can show a
+  "Start free trial" call to action only when it applies.
 
 ## [1.9.1] - 2026-06-15
 
