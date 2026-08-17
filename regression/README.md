@@ -20,6 +20,10 @@ project update.
   inputs.
 - `notifications`: schedule/unschedule and option validation.
 - `social`: local bot/profile/avatar helpers. These are host-free in Godot.
+- `lifecycle`: verifies the `hidden`/`shown`/`exit_requested` signals expose a
+  connect/disconnect cycle without error. The events themselves are
+  host-triggered (document visibility, platform exit flow) and not exercised
+  here.
 - `referrals-read`: referral listing.
 - `referrals-share`: share dialog with reference, entry payload, share text,
   and notification templates.
