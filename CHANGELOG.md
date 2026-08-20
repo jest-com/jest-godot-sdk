@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.12.0] - 2026-08-20
+
+### Added
+
+- `JestPurchase.sandbox` / `JestSubscription.sandbox` — `true` when no money
+  changed hands: a sandbox user made the purchase or started the subscription
+  (billed at 0), or it came from the Developer Console simulator (which keeps
+  the configured price). `false` for real purchases and subscriptions.
+
 ## [1.11.0] - 2026-08-17
 
 ### Added
