@@ -23,6 +23,9 @@ var retention_offer: Dictionary = {}
 var trial_eligible: bool = false
 ## @deprecated Always 0. Kept for SDK backwards compatibility.
 var estimated_revenue: float = 0.0
+## True when no money can change hands: the player is a sandbox user, or this
+## came from the Developer Console simulator. False for real players.
+var sandbox: bool = false
 
 
 static func from_dict(d: Dictionary) -> JestSubscription:
@@ -39,4 +42,5 @@ static func from_dict(d: Dictionary) -> JestSubscription:
 	s.retention_offer = retention if retention is Dictionary else {}
 	s.trial_eligible = bool(d.get("trialEligible", false))
 	s.estimated_revenue = float(d.get("estimatedRevenue", 0.0))
+	s.sandbox = bool(d.get("sandbox", false))
 	return s

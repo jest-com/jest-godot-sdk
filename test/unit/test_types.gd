@@ -87,6 +87,16 @@ func test_purchase_null_completed_at():
 	assert_eq(p.completed_at, 0)
 
 
+func test_purchase_sandbox_true():
+	var p := JestPurchase.from_dict({"sandbox": true})
+	assert_true(p.sandbox)
+
+
+func test_purchase_sandbox_missing_defaults_false():
+	var p := JestPurchase.from_dict({})
+	assert_false(p.sandbox)
+
+
 # --- JestPurchaseResult ---
 
 func test_purchase_result_success():
@@ -169,6 +179,16 @@ func test_subscription_retention_offer_missing():
 func test_subscription_from_dict_missing_trial_eligible():
 	var s := JestSubscription.from_dict({"sku": "basic"})
 	assert_eq(s.trial_eligible, false)
+
+
+func test_subscription_sandbox_true():
+	var s := JestSubscription.from_dict({"sku": "premium", "sandbox": true})
+	assert_true(s.sandbox)
+
+
+func test_subscription_sandbox_missing_defaults_false():
+	var s := JestSubscription.from_dict({"sku": "basic"})
+	assert_false(s.sandbox)
 
 
 # --- JestSubscriptionResult ---

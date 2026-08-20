@@ -22,7 +22,10 @@ func get_products() -> Array[JestProduct]:
 ## Must be awaited: var result = await JestSDK.payment.begin_purchase("gems_100")
 ## [br][b]Sandbox testing:[/b] sandbox users see real product prices in the game UI,
 ## but the platform checkout modal makes clear that no charge will be made and the
-## resulting purchase records 0 credits.
+## resulting purchase records 0 credits. Such a purchase carries [code]sandbox: true[/code]
+## — in the SDK payload and in the signed JWS — so your backend can grant the item
+## while keeping test traffic out of revenue reporting. Purchases driven from the
+## Developer Console simulator carry the same flag, at their configured price.
 func begin_purchase(sku: String) -> JestPurchaseResult:
 	if sku.strip_edges().is_empty():
 		return JestPurchaseResult.make_error("invalid_sku")
@@ -77,6 +80,9 @@ func begin_subscription(sku: String) -> JestSubscriptionResult:
 
 ## Retrieves subscription offers and the player's current entitlement on each.
 ## Must be awaited: var result = await JestSDK.payment.get_subscriptions()
+## [br]For sandbox users, and in the Developer Console simulator, every entry carries
+## [code]sandbox: true[/code]: price shows as configured, but any subscription started
+## that way bills nothing.
 ## [br]For guest players, result.subscriptions is empty.
 ## [br]Verify result.signed server-side for any entitlement grant.
 func get_subscriptions() -> JestSubscriptionsResult:
