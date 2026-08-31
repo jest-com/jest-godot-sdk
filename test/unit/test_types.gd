@@ -65,7 +65,7 @@ func test_purchase_from_dict():
 		"credits": 99.0,
 		"createdAt": 1700000000,
 		"completedAt": 1700000100,
-		"estimatedRevenue": 0
+		"estimatedRevenue": 86.67
 	}
 	var p := JestPurchase.from_dict(d)
 	assert_eq(p.purchase_token, "tok_123")
@@ -73,8 +73,7 @@ func test_purchase_from_dict():
 	assert_eq(p.credits, 99.0)
 	assert_eq(p.created_at, 1700000000)
 	assert_eq(p.completed_at, 1700000100)
-	# estimated_revenue is deprecated and always 0.
-	assert_eq(p.estimated_revenue, 0.0)
+	assert_eq(p.estimated_revenue, 86.67)
 
 
 func test_purchase_decimal_credits():
@@ -144,15 +143,14 @@ func test_subscription_from_dict():
 		"currency": "USD",
 		"billingPeriod": "monthly",
 		"trialEligible": true,
-		"estimatedRevenue": 0
+		"estimatedRevenue": 8.42
 	}
 	var s := JestSubscription.from_dict(d)
 	assert_eq(s.sku, "premium")
 	assert_eq(s.status, "active")
 	assert_eq(s.billing_period, "monthly")
 	assert_eq(s.trial_eligible, true)
-	# estimated_revenue is deprecated and always 0.
-	assert_eq(s.estimated_revenue, 0.0)
+	assert_eq(s.estimated_revenue, 8.42)
 
 
 func test_subscription_from_dict_missing_estimated_revenue():
