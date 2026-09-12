@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.1] - 2026-09-12
+
+### Fixed
+
+- Mock `begin_purchase` now echoes back the requested product SKU and its
+  configured price/currency instead of always returning `gems_100` at a fixed
+  price, matching the sandbox behavior of the live host.
+
 ## [1.12.0] - 2026-08-20
 
 ### Added
