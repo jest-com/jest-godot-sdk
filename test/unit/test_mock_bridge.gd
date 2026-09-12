@@ -88,14 +88,27 @@ func test_custom_products():
 
 func test_purchase_success():
 	mock.mock_purchase_succeeds = true
-	var r := JSON.parse_string(mock.get_purchase_response())
+	var r := JSON.parse_string(mock.get_purchase_response("gems_100"))
 	assert_eq(r["result"], "success")
 	assert_true(r.has("purchase"))
 
 
+func test_purchase_echoes_requested_sku():
+	var r := JSON.parse_string(mock.get_purchase_response("gems_500"))
+	assert_eq(r["purchase"]["productSku"], "gems_500")
+	assert_eq(r["purchase"]["price"], 499.0)
+	assert_eq(r["purchase"]["currency"], "USD")
+
+
+func test_purchase_unknown_sku_uses_default_price():
+	var r := JSON.parse_string(mock.get_purchase_response("unknown_sku"))
+	assert_eq(r["purchase"]["productSku"], "unknown_sku")
+	assert_eq(r["purchase"]["price"], 100.0)
+
+
 func test_purchase_cancel():
 	mock.mock_purchase_succeeds = false
-	var r := JSON.parse_string(mock.get_purchase_response())
+	var r := JSON.parse_string(mock.get_purchase_response("gems_100"))
 	assert_eq(r["result"], "cancel")
 
 
