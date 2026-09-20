@@ -158,7 +158,7 @@ func validate_name(name_value: String) -> JestNameValidationResult:
 
 
 ## Records a custom analytics event for the current player.
-## Events appear in the Developer Console for tracking milestones, funnels, and feature usage.
+## Retired from the docs; still delivered for games that call it.
 ## event_name: stable, lowercase, snake_case name (e.g. "level_complete").
 ## properties: optional structured data attached to the event.
 func capture_event(event_name: String, properties: Dictionary = {}) -> void:
