@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0] - 2026-09-21
+
+### Changed
+
+- `JestNotificationOptions.priority` now defaults to `"medium"` instead of
+  `"low"`, matching the platform's actual default delivery weight.
+
 ## [1.12.0] - 2026-08-20
 
 ### Added
