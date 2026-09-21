@@ -13,6 +13,15 @@ func test_notification_valid_with_days():
 	assert_eq(opts.validate(), "")
 
 
+func test_notification_valid_with_zero_days():
+	var opts := JestNotificationOptions.new()
+	opts.body = "Hello"
+	opts.cta_text = "Play"
+	opts.identifier = "test"
+	opts.scheduled_in_days = 0
+	assert_eq(opts.validate(), "")
+
+
 func test_notification_valid_with_date():
 	var opts := JestNotificationOptions.new()
 	opts.body = "Hello"
@@ -128,7 +137,7 @@ func test_notification_days_out_of_range():
 	opts.cta_text = "Play"
 	opts.identifier = "test"
 	opts.scheduled_in_days = 10
-	assert_eq(opts.validate(), "scheduled_in_days must be between 1 and 7")
+	assert_eq(opts.validate(), "scheduled_in_days must be between 0 and 7")
 
 
 func test_notification_date_in_past():
