@@ -104,6 +104,11 @@ func test_notification_missing_identifier():
 	assert_eq(opts.validate(), "identifier is required")
 
 
+func test_notification_default_priority():
+	var opts := JestNotificationOptions.new()
+	assert_eq(opts.priority, "medium")
+
+
 func test_notification_no_schedule():
 	var opts := JestNotificationOptions.new()
 	opts.body = "Hello"
