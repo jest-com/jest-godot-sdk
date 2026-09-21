@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0] - 2026-09-21
+
+### Changed
+
+- `JestNotificationOptions.scheduled_in_days` now accepts `0` to deliver a
+  notification later the same day (lands at least 10 minutes from now). The
+  unset default changed from `0` to `-1`; `0` is no longer treated as unset.
+
 ## [1.12.0] - 2026-08-20
 
 ### Added
