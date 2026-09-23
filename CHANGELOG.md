@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.13.0] - 2026-09-23
+
+### Added
+
+- `JestSDK.social.share_image(image = "", entry_payload = {})` — opens the
+  platform's share sheet for an image, the same sheet the platform's own
+  screenshot button shows, offering chat, the native share sheet and download.
+  Omit `image` to have the platform capture the game's canvas, or its
+  registered screenshot provider. `entry_payload` is handed back to the game
+  when a player opens the shared message. Returns a `JestShareResult` whose
+  `canceled` field is `true` when the sheet closed without sharing — not proof
+  that nothing was posted.
+
 ## [1.12.0] - 2026-08-20
 
 ### Added
