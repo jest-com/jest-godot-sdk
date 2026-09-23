@@ -12,6 +12,7 @@ const SCENARIOS: Array[String] = [
 	"commerce-errors",
 	"notifications",
 	"social",
+	"social-share-image",
 	"lifecycle",
 	"referrals-read",
 	"referrals-share",
@@ -116,6 +117,8 @@ func _run_command(command: Dictionary) -> void:
 			assertions = await _run_notifications(run_id)
 		"social":
 			assertions = await _run_social()
+		"social-share-image":
+			assertions = await _run_social_share_image(command)
 		"lifecycle":
 			assertions = await _run_lifecycle()
 		"referrals-read":
@@ -285,6 +288,16 @@ func _run_social() -> Array[Dictionary]:
 		_assert_true("profile username is string", profile.username is String),
 		_assert_true("profile avatar is string", profile.avatar_url is String),
 		_assert_true("legacy player avatar is string", legacy_avatar is String),
+	]
+
+
+func _run_social_share_image(command: Dictionary) -> Array[Dictionary]:
+	var options: Dictionary = command.get("options", {})
+	var entry_payload: Dictionary = options.get("entryPayloadExpected", {})
+	var result := await JestSDK.social.share_image("", entry_payload)
+	return [
+		_assert_true("share image ok", result.ok),
+		_assert_true("share image canceled flag is bool", result.canceled is bool),
 	]
 
 
