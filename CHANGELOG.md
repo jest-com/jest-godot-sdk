@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0] - 2026-09-29
+
+### Added
+
+- `JestSDK.internal_api.reserve_browser_continuation_link()` and
+  `open_reserved_browser_continuation_link()` — internal API to hand off an
+  onboarding to the external browser, carrying the analytics id across.
+
 ## [1.12.0] - 2026-08-20
 
 ### Added
