@@ -384,6 +384,7 @@ func _run_guardrails() -> Array[Dictionary]:
 	JestSDK.capture_event("", {})
 	JestSDK.internal_api.capture_onboarding_event("not_a_real_event", {})
 	JestSDK.internal_api.send_reserved_login_message({})
+	JestSDK.internal_api.open_reserved_browser_continuation_link({})
 	await get_tree().process_frame
 	return [
 		_assert_eq("empty feature flag key rejected", bad_flag.error, "key cannot be empty"),
