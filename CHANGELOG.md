@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0] - 2026-10-01
+
+### Added
+
+- `JestNotificationOptions.asset` — inline base64 data URL (png, jpeg, or webp,
+  at most 2MB) attached to a scheduled notification and moderated before
+  delivery. Mutually exclusive with `asset_reference` / `image_reference`.
+
 ## [1.12.0] - 2026-08-20
 
 ### Added

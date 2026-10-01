@@ -24,6 +24,35 @@ func test_notification_valid_with_date():
 	assert_eq(opts.validate(), "")
 
 
+func _asset_opts(asset: String) -> JestNotificationOptions:
+	var opts := JestNotificationOptions.new()
+	opts.body = "Hello"
+	opts.cta_text = "Play"
+	opts.identifier = "test"
+	opts.scheduled_in_days = 1
+	opts.asset = asset
+	return opts
+
+
+func test_notification_inline_asset_valid():
+	assert_eq(_asset_opts("data:image/png;base64,AAAA").validate(), "")
+
+
+func test_notification_inline_asset_bad_mime():
+	assert_ne(_asset_opts("data:image/gif;base64,AAAA").validate(), "")
+
+
+func test_notification_inline_asset_too_large():
+	var big := "data:image/png;base64," + "A".repeat(JestNotificationOptions.INLINE_ASSET_MAX_BASE64_LENGTH)
+	assert_eq(_asset_opts(big).validate(), "asset must be at most 2MB")
+
+
+func test_notification_inline_asset_with_asset_reference():
+	var opts := _asset_opts("data:image/webp;base64,AAAA")
+	opts.asset_reference = "ref"
+	assert_eq(opts.validate(), "asset and asset_reference are mutually exclusive")
+
+
 func test_notification_missing_body():
 	var opts := JestNotificationOptions.new()
 	opts.cta_text = "Play"
