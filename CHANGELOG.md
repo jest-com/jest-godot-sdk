@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0] - 2026-08-31
+
+### Changed
+
+- `JestPurchase.estimated_revenue` / `JestSubscription.estimated_revenue` — no
+  longer always `0`. Now reports the approximate revenue in USD for the
+  publisher, accounting for trials, intro offers, and retention discounts.
+
 ## [1.12.0] - 2026-08-20
 
 ### Added

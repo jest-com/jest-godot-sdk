@@ -21,7 +21,7 @@ var retention_offer: Dictionary = {}
 ## Whether the wallet is eligible for this subscription's free trial: it has a
 ## trial configured and the wallet has never subscribed to it before.
 var trial_eligible: bool = false
-## @deprecated Always 0. Kept for SDK backwards compatibility.
+## Approximate revenue in USD for the publisher for the current billing period.
 var estimated_revenue: float = 0.0
 ## True when no money can change hands: the player is a sandbox user, or this
 ## came from the Developer Console simulator. False for real players.
